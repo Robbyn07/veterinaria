@@ -192,6 +192,7 @@ public class VAgregarEmpleado extends JInternalFrame implements ActionListener{
                 }
                 
                 break;
+ 
         }
     }
     

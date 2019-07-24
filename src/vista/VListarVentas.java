@@ -8,12 +8,16 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.FacturaCabecera;
+import modelo.FacturaDetalle;
 
 /**
  *
@@ -107,7 +111,19 @@ public class VListarVentas extends JInternalFrame implements ActionListener{
     
     public void mostrar(){
         
+        ArrayList<List> lista =(ArrayList<List>) cfd.listarVentas(con);
+        int n = lista.size();
         
+        for(int i = 0; i < n; i++){
+            Object fila[] = new Object[3];
+            fila[0] = lista.get(i).get(0);
+            fila[1] = lista.get(i).get(1);
+            fila[2] = lista.get(i).get(2);
+
+            dt.addRow(fila);
+         
+        
+        }
        
     }
 }

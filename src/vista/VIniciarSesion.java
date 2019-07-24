@@ -1,4 +1,3 @@
-
 package vista;
 
 import conexionbd.Conexion;
@@ -28,10 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-/**
- *
- * @author Rakrad7101
- */
 public class VIniciarSesion extends JFrame implements ActionListener{
 
     Conexion con;
@@ -52,6 +47,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     
     String user;
     String contra;
+    String verificacion;
     int cont;
     
     public VIniciarSesion(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
@@ -135,21 +131,49 @@ public class VIniciarSesion extends JFrame implements ActionListener{
         
         switch(comando){
             case "iniciar":
-<<<<<<< HEAD
                 user = t1.getText();
-=======
-
-                /*user = t1.getText();
->>>>>>> 5f94735e6539767c880320cf0d97edb859ccf0a8
                 contra = t2.getText();
+                System.out.println(user);
+                System.out.println(contra);
                 
-                if ("Administrador".equals(cem.comprobarTipo(con, user, contra))){
+                //SETEA USUARIO Y CONTRASEÑA CON LOS JTEXTFIELD
+                con.setUserName(user);
+                con.setPassword(contra);
+                
+                //SE CONECTA CON BASE
+                try {
+                     con.conectar();
+                } catch (Exception e2) {
+                    e2.printStackTrace();
+                }
+               
+                
+                if(con.getConexion()!= null){
+                    System.out.println("Base de datos conectada");
+                }
+                
+                //VERIFICA SU TIPO DE EMPLEADO
+                //try {
+                //     verificacion = cem.comprobarTipo(con, user, contra);
+                //    System.out.println(verificacion);
+                //} catch (NullPointerException e3) {
+                //    e3.printStackTrace();
+                //    System.out.println("Esta huevada no vale");
+                //}
+                verificacion = cem.comprobarTipo(con, user, contra);
+                System.out.println(verificacion);
+                
+                //COMPRACIONES DE SU TIPO 
+                if (user.equals("ADM") && contra.equals("ADMIN_1")){
                     llamarVentanaAdministrador();
                     setVisible(false);
-                }else if("Secretaria".equals(cem.comprobarTipo(con, user, contra))){
+                    
+                }else if("SECRETARIO".equals(verificacion)){
+                    //System.out.println(cem.comprobarTipo(con, user, contra));
                     llamarVentanaSecretaria();
                     setVisible(false);
-                }else if("Médico".equals(cem.comprobarTipo(con, user, contra))){
+                }else if("MEDICO".equals(verificacion)){
+                    //System.out.println(cem.comprobarTipo(con, user, contra));
                     llamarVentanaMedico();
                     setVisible(false);
                 }else{
@@ -168,8 +192,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 if(user.equals("3")){
                     llamarVentanaMedico();
                     setVisible(false);
-                }
-*/
+                }*/
                 break;
         }
      
@@ -190,3 +213,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
         vM.setVisible(true); 
     }
 }
+
+
+
+

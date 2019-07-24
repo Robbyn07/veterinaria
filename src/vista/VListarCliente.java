@@ -8,12 +8,14 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.Cliente;
 
 /**
  *
@@ -110,16 +112,16 @@ public class VListarCliente extends JInternalFrame implements ActionListener{
     }
     
     public void mostrar(){
-        
-        int n = cc.cliObtener(con).size();
+        ArrayList<Cliente> lista =(ArrayList<Cliente>) cc.cliObtener(con);
+        int n = lista.size();
         for(int i = 0; i < n; i++){
             Object fila[] = new Object[6];
-            fila[0] = cc.cliObtener(con).get(i).getPersonaCedula();
-            fila[1] = cc.cliObtener(con).get(i).getPersonaNombre();
-            fila[2] = cc.cliObtener(con).get(i).getPersonaApellido();        
-            fila[3] = cc.cliObtener(con).get(i).getPersonaTelefono();
-            fila[4] = cc.cliObtener(con).get(i).getPersonaEmail();
-            fila[5] = cc.cliObtener(con).get(i).getPersonaDireccion();
+            fila[0] = lista.get(i).getPersonaCedula();
+            fila[1] = lista.get(i).getPersonaNombre();
+            fila[2] = lista.get(i).getPersonaApellido();        
+            fila[3] = lista.get(i).getPersonaTelefono();
+            fila[4] = lista.get(i).getPersonaEmail();
+            fila[5] = lista.get(i).getPersonaDireccion();
 
             dt.addRow(fila);
         }

@@ -34,9 +34,9 @@ public class VAdministrador extends JFrame implements ActionListener {
     ControladorFacturaCabecera cfc;
     ControladorFacturaDetalle cfd;
     
-    public VAdministrador(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,ControladorProveedor cpv,
-            ControladorProducto cpd,ControladorCliente cc,ControladorFacturaCabecera cfc,
-            ControladorFacturaDetalle cfd){
+    public VAdministrador(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
+            ControladorProveedor cpv,ControladorProducto cpd,ControladorCliente cc,
+            ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd){
         escritorioA = new JDesktopPane();
         this.con = con;
         this.cem = cem;
@@ -197,6 +197,7 @@ public class VAdministrador extends JFrame implements ActionListener {
                     
             case "cerrarS":
                 llamarVentanaIniciarS();
+                con.cerrarConexion();
                 break;
 
         }
@@ -216,13 +217,6 @@ public class VAdministrador extends JFrame implements ActionListener {
         escritorioA.add(vme);
     }
 
-    public void llamarVentanaMostrarPd() {
-        VMostrarProducto vmp = new VMostrarProducto();
-        vmp.setVisible(true);
-        
-        escritorioA.add(vmp);
-    }
-    
     public void llamarVentanaAgregarPv() {
         VAgregarProveedor vapv = new VAgregarProveedor(con,cpv);
         vapv.setVisible(true);
@@ -257,7 +251,6 @@ public class VAdministrador extends JFrame implements ActionListener {
         
         escritorioA.add(vmpd);
     }
-<<<<<<< HEAD
        
     public void llamarVentanaMostrarPd() {
         VMostrarProducto vmp = new VMostrarProducto(con,cpd);
@@ -265,8 +258,6 @@ public class VAdministrador extends JFrame implements ActionListener {
         
         escritorioA.add(vmp);
     }
-=======
->>>>>>> 5f94735e6539767c880320cf0d97edb859ccf0a8
     
     public void llamarVentanaMostrarEm() {
         VListarEmpleado vle = new VListarEmpleado(con,cem);

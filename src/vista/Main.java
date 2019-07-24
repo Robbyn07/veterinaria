@@ -1,4 +1,3 @@
-
 package vista;
 
 import conexionbd.Conexion;
@@ -22,22 +21,20 @@ import conexionbd.SentenciasCRUD;
  *
  * @author Rakrad7101
  */
+
 public class Main {
             
     public static void main(String [] args){
         
         Conexion con = new Conexion();
-        /*SentenciasCRUD s = new SentenciasCRUD();
+        SentenciasCRUD s = new SentenciasCRUD();
         
-        con.setUrl("jdbc:oracle:thin:@localhost:1521:robbynbd");
-        con.setUserName("Veterinaria");
-        con.setPassword("lprt_54");
+        con.setUrl("jdbc:oracle:thin:@localhost:1521:orcl");
+        //con.setUserName("ADM");
+        //con.setPassword("ADMIN_1");
         
-        con.conectar();
+        //con.conectar();
         
-        if(con.getConexion()!= null){
-            System.out.println("Base de datos conectada");
-            
             ControladorCaracter cca = new ControladorCaracter();
             ControladorEmpleado cem = new ControladorEmpleado();
             ControladorProveedor cpv = new ControladorProveedor();
@@ -57,10 +54,9 @@ public class Main {
                                                     cfc,cfd,cd,crc,crd);
             vi.setVisible(true);
             
-            con.cerrarConexion();
-        }*/
+
         
-        ControladorCaracter cca = new ControladorCaracter();
+        /*ControladorCaracter cca = new ControladorCaracter();
             ControladorEmpleado cem = new ControladorEmpleado();
             ControladorProveedor cpv = new ControladorProveedor();
             ControladorProducto cpd = new ControladorProducto();
@@ -74,14 +70,11 @@ public class Main {
             ControladorDiagnostico cd = new ControladorDiagnostico();
             ControladorRecetaCabecera crc = new ControladorRecetaCabecera();
             ControladorRecetaDetalle crd = new ControladorRecetaDetalle();
-
+            
             VIniciarSesion vi = new VIniciarSesion(con,cca,cem,cpv,cpd,cc,cm,ces,cr,cct,
                                                     cfc,cfd,cd,crc,crd);
             vi.setVisible(true);
-        
+        */
     }
 }
-
-
-
 

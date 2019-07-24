@@ -44,10 +44,10 @@ public class VSecretaria extends JFrame implements ActionListener{
     ControladorRecetaCabecera crc;
     ControladorRecetaDetalle crd;
     
-    public VSecretaria(Conexion con,ControladorCaracter cca,ControladorProducto cpd,ControladorCliente cc,
-            ControladorMascota cm,ControladorEspecie ces,ControladorRaza cr,
-            ControladorCita cct,ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
-            ControladorDiagnostico cd,ControladorRecetaCabecera crc,
+    public VSecretaria(Conexion con,ControladorCaracter cca,ControladorProducto cpd,
+            ControladorCliente cc,ControladorMascota cm,ControladorEspecie ces,
+            ControladorRaza cr,ControladorCita cct,ControladorFacturaCabecera cfc,
+            ControladorFacturaDetalle cfd,ControladorDiagnostico cd,ControladorRecetaCabecera crc,
             ControladorRecetaDetalle crd){
         this.con = con;
         this.cca = cca;
@@ -202,6 +202,7 @@ public class VSecretaria extends JFrame implements ActionListener{
                 
             case "cerrarS":
                 llamarVentanaIniciarS();
+                con.cerrarConexion();
                 break;
 
         }

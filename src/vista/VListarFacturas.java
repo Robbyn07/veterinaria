@@ -8,12 +8,14 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.FacturaCabecera;
 
 /**
  *
@@ -108,17 +110,17 @@ public class VListarFacturas extends JInternalFrame implements ActionListener{
     }
     
     public void mostrar(){
-    
-        int n = cfc.cabObtener(con).size();
+        ArrayList<FacturaCabecera> lista =(ArrayList<FacturaCabecera>) cfc.cabObtener(con);
+        int n = lista.size();
         
         for(int i = 0; i < n; i++){
             Object fila[] = new Object[5];
-            fila[0] = cfc.cabObtener(con).get(i).getFacturaCabeceraNumero();
-            fila[1] = cfc.cabObtener(con).get(i).getFacturaCabeceraFecha();
-            fila[2] = cfc.cabObtener(con).get(i).getCliente().getPersonaNombre() + " " + 
-                    cfc.cabObtener(con).get(i).getCliente().getPersonaApellido();
-            fila[3] = cfc.cabObtener(con).get(i).getFacturaCabeceraTotal();
-            fila[4] = cfc.cabObtener(con).get(i).getFacturaCabeceraTipoPago();
+            fila[0] = lista.get(i).getFacturaCabeceraNumero();
+            fila[1] = lista.get(i).getFacturaCabeceraFecha();
+            fila[2] = lista.get(i).getCliente().getPersonaNombre() + " " + 
+                    lista.get(i).getCliente().getPersonaApellido();
+            fila[3] = lista.get(i).getFacturaCabeceraTotal();
+            fila[4] = lista.get(i).getFacturaCabeceraTipoPago();
 
             dt.addRow(fila);
             

@@ -8,12 +8,15 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import modelo.Producto;
 
 /**
  *
@@ -107,16 +110,18 @@ public class VMostrarProducto extends JInternalFrame implements ActionListener{
         }
     }
     
-    public void mostrar(){     
-        int n = cpd.proObtener(con).size();
+    public void mostrar(){
+        ArrayList<Producto> lista =(ArrayList<Producto>) cpd.proObtener(con);
+        int n = lista.size();
+        //System.out.println("uaggiudg"+lista.get(1).getProductoId());
         for(int i = 0; i < n; i++){
             Object fila[] = new Object[6];
-            fila[0] = cpd.proObtener(con).get(i).getProductoId();
-            fila[1] = cpd.proObtener(con).get(i).getProductoNombre();
-            fila[2] = cpd.proObtener(con).get(i).getProductoCategoria();
-            fila[3] = cpd.proObtener(con).get(i).getProductoPrecioCompra();
-            fila[4] = cpd.proObtener(con).get(i).getProductoPrecioVenta();
-            fila[5] = cpd.proObtener(con).get(i).getProductoStock();
+            fila[0] = lista.get(i).getProductoId();
+            fila[1] = lista.get(i).getProductoNombre();
+            fila[2] = lista.get(i).getProductoCategoria();
+            fila[3] = lista.get(i).getProductoPrecioCompra();
+            fila[4] = lista.get(i).getProductoPrecioVenta();
+            fila[5] = lista.get(i).getProductoStock();
 
             dt.addRow(fila);
         }

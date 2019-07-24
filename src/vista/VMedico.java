@@ -124,6 +124,7 @@ public class VMedico extends JFrame implements ActionListener{
             
             case "CerrarS":
                 llamarVentanaCerrarS();
+                con.cerrarConexion();
                 break;
       
         }

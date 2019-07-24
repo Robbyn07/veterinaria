@@ -23,9 +23,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import modelo.Empleado;
 
 public class VIniciarSesion extends JFrame implements ActionListener{
 
@@ -136,6 +136,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 System.out.println(user);
                 System.out.println(contra);
                 
+                /*
                 //SETEA USUARIO Y CONTRASEÑA CON LOS JTEXTFIELD
                 con.setUserName(user);
                 con.setPassword(contra);
@@ -178,8 +179,8 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                     setVisible(false);
                 }else{
                     JOptionPane.showMessageDialog(null, "Vuelva a ingresar los datos");
-                }
-                /*
+                */
+
                 user = t1.getText();
                 if(user.equals("1")){
                     llamarVentanaAdministrador();
@@ -192,10 +193,16 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 if(user.equals("3")){
                     llamarVentanaMedico();
                     setVisible(false);
-                }*/
+                }
                 break;
         }
      
+    }
+    
+    //Esperar a terminar Controlador
+    Empleado emp;
+    public void comprobarTipo(){
+        
     }
     
     public void llamarVentanaAdministrador(){
@@ -204,12 +211,12 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaSecretaria(){
-        VSecretaria vS = new VSecretaria(con,cca,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
+        VSecretaria vS = new VSecretaria(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
         vS.setVisible(true); 
     }
     
     public void llamarVentanaMedico(){
-        VMedico vM = new VMedico(con,cca,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
+        VMedico vM = new VMedico(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
         vM.setVisible(true); 
     }
 }

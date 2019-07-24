@@ -51,8 +51,5 @@ public class FacturaDetalle {
     public void setProducto(Producto producto) {
         this.producto = producto;
     }
-    
-    
-    
-    
+
 }

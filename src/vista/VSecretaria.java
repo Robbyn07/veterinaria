@@ -6,6 +6,7 @@ import conexionbd.ControladorCaracter;
 import conexionbd.ControladorCita;
 import conexionbd.ControladorCliente;
 import conexionbd.ControladorDiagnostico;
+import conexionbd.ControladorEmpleado;
 import conexionbd.ControladorEspecie;
 import conexionbd.ControladorFacturaCabecera;
 import conexionbd.ControladorFacturaDetalle;
@@ -32,6 +33,7 @@ public class VSecretaria extends JFrame implements ActionListener{
     private JDesktopPane escritorioS;
     Conexion con;
     ControladorCaracter cca;
+    ControladorEmpleado cem;
     ControladorProducto cpd;
     ControladorCliente cc;
     ControladorMascota cm;
@@ -44,13 +46,15 @@ public class VSecretaria extends JFrame implements ActionListener{
     ControladorRecetaCabecera crc;
     ControladorRecetaDetalle crd;
     
-    public VSecretaria(Conexion con,ControladorCaracter cca,ControladorProducto cpd,
-            ControladorCliente cc,ControladorMascota cm,ControladorEspecie ces,
-            ControladorRaza cr,ControladorCita cct,ControladorFacturaCabecera cfc,
-            ControladorFacturaDetalle cfd,ControladorDiagnostico cd,ControladorRecetaCabecera crc,
+    public VSecretaria(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
+            ControladorProducto cpd,ControladorCliente cc,ControladorMascota cm,
+            ControladorEspecie ces,ControladorRaza cr,ControladorCita cct,
+            ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
+            ControladorDiagnostico cd,ControladorRecetaCabecera crc,
             ControladorRecetaDetalle crd){
         this.con = con;
         this.cca = cca;
+        this.cem = cem;
         this.cpd = cpd;
         this.cc = cc;
         this.cm = cm;
@@ -265,17 +269,17 @@ public class VSecretaria extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaAnularF(){
-        VAnularFactura vaf = new VAnularFactura(con,cca,cpd,cc,cfc,cfd);
+        VAnularFactura vaf = new VAnularFactura(con,cpd,cc,cfc,cfd);
         vaf.setVisible(true);
     
         escritorioS.add(vaf);
     }
     
     public void llamarVentanaEditarC(){
-        VEditarCuenta vec = new VEditarCuenta();
-        vec.setVisible(true);
-    
-        escritorioS.add(vec);
+        VCambiarContraseña vcc = new VCambiarContraseña(con,cem);
+        vcc.setVisible(true);
+        
+        escritorioS.add(vcc);
     }
     
     public void llamarVentanaIniciarS() {

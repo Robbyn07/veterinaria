@@ -113,14 +113,6 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
         g1.gridy = 4;
         b3.addActionListener(this);
         b3.setActionCommand("editar");
-        cp.add(b3, g1);
-        
-        b4 = new JButton("Eliminar");
-        g1.gridx = 2;
-        g1.gridy = 4;
-        b4.addActionListener(this);
-        b4.setActionCommand("eliminar");
-        cp.add(b4, g1); 
         
     }
     
@@ -140,10 +132,6 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
                 
             case "editar":
                 editarProveedor();
-                break;
-                
-            case "eliminar":
-                eliminarProveedor();
                 break;
         }
     }
@@ -199,24 +187,5 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
             
         }
     }
-    
-    public void eliminarProveedor(){
-        ruc = t1.getText();
-        
-        int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
-        
-        /*if(res == 0){
-            if(cpv == true){
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
-            }else{
-                JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
-                        + "la operación",
-                    JOptionPane.ERROR_MESSAGE); 
-            }
-        }else{
-            
-        }*/
-        
-    }  
+
 }

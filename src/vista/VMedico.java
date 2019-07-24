@@ -10,6 +10,7 @@ import conexionbd.ControladorCaracter;
 import conexionbd.ControladorCita;
 import conexionbd.ControladorCliente;
 import conexionbd.ControladorDiagnostico;
+import conexionbd.ControladorEmpleado;
 import conexionbd.ControladorEspecie;
 import conexionbd.ControladorFacturaCabecera;
 import conexionbd.ControladorFacturaDetalle;
@@ -33,6 +34,7 @@ public class VMedico extends JFrame implements ActionListener{
     private JDesktopPane escritorioM;
     Conexion con;
     ControladorCaracter cca;
+    ControladorEmpleado cem;
     ControladorProducto cpd;
     ControladorCliente cc;
     ControladorMascota cm;
@@ -45,13 +47,15 @@ public class VMedico extends JFrame implements ActionListener{
     ControladorRecetaCabecera crc;
     ControladorRecetaDetalle crd;
     
-    public VMedico(Conexion con,ControladorCaracter cca,ControladorProducto cpd,ControladorCliente cc,
-            ControladorMascota cm,ControladorEspecie ces,ControladorRaza cr,
-            ControladorCita cct,ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
+    public VMedico(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
+            ControladorProducto cpd,ControladorCliente cc,ControladorMascota cm,
+            ControladorEspecie ces,ControladorRaza cr,ControladorCita cct,
+            ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
             ControladorDiagnostico cd,ControladorRecetaCabecera crc,
             ControladorRecetaDetalle crd){
         this.con = con;
         this.cca = cca;
+        this.cem = cem;
         this.cpd = cpd;
         this.cc = cc;
         this.cm = cm;
@@ -93,7 +97,6 @@ public class VMedico extends JFrame implements ActionListener{
             i2.addActionListener(this);
             i2.setActionCommand("HistorialM");
             m1.add(i2);
-            
             
         barra.add(m1);
         
@@ -145,6 +148,7 @@ public class VMedico extends JFrame implements ActionListener{
     private void llamarVentanaHistorialM() {
         VHistorial vH = new VHistorial();
         vH.setVisible(true);
+        
         escritorioM.add(vH);
         try {
 	vH.setSelected(true);

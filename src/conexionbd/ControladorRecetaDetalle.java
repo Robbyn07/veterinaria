@@ -69,7 +69,7 @@ public class ControladorRecetaDetalle {
             while(resultado.next()){
                 recetaDetalle.setRecetaDetalleId(resultado.getInt("rde_id"));
                 recetaDetalle.setRecetaDetalleNombre(resultado.getString("rde_nombre"));
-                recetaDetalle.setRecetaDetalleCantidad(resultado.getInt("rde_cantidad"));
+                recetaDetalle.setRecetaDetalleCantidad(resultado.getString("rde_cantidad"));
                 recetaDetalle.setRecetaDetalleDosificacion(resultado.getString("rde_dosificacion"));
             }
             
@@ -96,7 +96,7 @@ public class ControladorRecetaDetalle {
 
                 //sentencia.setInt(1, recetaDetalle.getRecetaDetalleId());
                 sentencia.setString(1, recetaDetalle.getRecetaDetalleNombre());
-                sentencia.setInt(2, recetaDetalle.getRecetaDetalleCantidad());
+                sentencia.setString(2, recetaDetalle.getRecetaDetalleCantidad());
                 sentencia.setString(3, recetaDetalle.getRecetaDetalleDosificacion());
                 sentencia.setInt(4, recetaCabeceraId);
 

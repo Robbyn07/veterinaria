@@ -16,8 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-import modelo.FacturaCabecera;
-import modelo.FacturaDetalle;
 
 /**
  *
@@ -121,8 +119,7 @@ public class VListarVentas extends JInternalFrame implements ActionListener{
             fila[2] = lista.get(i).get(2);
 
             dt.addRow(fila);
-         
-        
+
         }
        
     }

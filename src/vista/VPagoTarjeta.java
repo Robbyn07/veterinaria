@@ -100,24 +100,17 @@ public class VPagoTarjeta extends JInternalFrame implements ActionListener{
         String comando = e.getActionCommand();
         System.out.println("Comando: " + comando);
         
-        switch(comando){
+        switch(comando){ 
             case "volver":
-                llamarMetodoP(getDesktopPane());
                 setVisible(false);
                 break;
             
             case "pagar":
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
+                JOptionPane.showMessageDialog(null, "Pago Exitoso");
                 setVisible(false);
                 break;    
 
         } 
     }    
-    
-    public void llamarMetodoP(JDesktopPane escritorio){
-        VMetodoPago vmp = new VMetodoPago();
-        vmp.setVisible(true);
-        
-        escritorio.add(vmp);
-    }
+
 }

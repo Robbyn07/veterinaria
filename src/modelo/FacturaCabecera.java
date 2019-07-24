@@ -100,8 +100,5 @@ public class FacturaCabecera {
     public void addFacturasDetalle(FacturaDetalle facturasDetalle) {
         this.facturasDetalle.add(facturasDetalle);
     }
-    
-    
-    
-    
+
 }

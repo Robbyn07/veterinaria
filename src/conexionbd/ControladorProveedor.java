@@ -169,31 +169,6 @@ public class ControladorProveedor {
     }
     
     
-    public boolean cancelarProveedor (Conexion con, Proveedor proveedor){
-        if(pvdBuscar(con, proveedor.getProveedorRuc())!=null){
-            try {
-                
-                sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_proveedores SET "
-                + "prv_estado=? "
-                + "WHERE prv_ruc=?");
-
-                sentencia.setString(1, proveedor.getProveedorEstado());
-                sentencia.setString(2, proveedor.getProveedorRuc());
-                
-                sentencia.executeUpdate();
-                
-                return true;
-                
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-            
-        } else
-            return false;
-          
-    }
-    
 }
 
 

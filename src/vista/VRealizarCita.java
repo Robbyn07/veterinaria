@@ -259,12 +259,12 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
         v = false;
         fecha = t1.getText();
         hora = t2.getText();
-        time = fecha + hora;
+        time = fecha +" "+ hora;
         cedula = t3.getText();
         
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date dateN = sdf.parse(time);
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss");
+            Date dateN = formato.parse(time);
             fechaC = new Timestamp(dateN.getTime());
             
             Cliente cli;

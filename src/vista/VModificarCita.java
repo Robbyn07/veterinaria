@@ -1,7 +1,6 @@
 
 package vista;
 
-import com.mxrck.autocompleter.TextAutoCompleter;
 import conexionbd.Conexion;
 import conexionbd.ControladorCaracter;
 import conexionbd.ControladorCita;
@@ -12,7 +11,10 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +24,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import modelo.Cliente;
+import modelo.Mascota;
 
 /**
  *
@@ -54,14 +57,13 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
     DefaultTableModel dt;
     private JTable tb1;
     private JScrollPane scr;
-    private boolean[] editable = {true,false,false,true};
+    private boolean[] editable = {false,false,false,true};
     
     private JButton b1;
     private JButton b2;
     private JButton b3;
     private JButton b4;
     private JTextField t1;
-    private TextAutoCompleter ac;
     
     public void ventanaModificarC(){
         Container cp = getContentPane();
@@ -70,13 +72,10 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         JPanel p1 = new JPanel(); 
         p1.setLayout(new FlowLayout());
         
-        JLabel l1 = new JLabel("Mascota:");
+        JLabel l1 = new JLabel("Cédula:");
         p1.add(l1);
-        
-        auto();
-        
+  
         t1 = new JTextField();
-        ac = new TextAutoCompleter(t1);
         p1.add(t1);
         
         b1 = new JButton("Buscar");
@@ -140,8 +139,8 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         System.out.println("Comando: " + comando);
         
         switch(comando){ 
-            case "busacr":
-                buscarMascota();
+            case "buscar":
+                buscarInformacion();
                 break;
             
             case "volver":
@@ -149,54 +148,91 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
                 break;
                 
             case "editar":
+                editarCita();
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;
                 
             case "eliminar":
+                eliminarCita();
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;    
  
         }
     }
     
-    public void auto(){
-        int n = cm.masObtenerTodos(con).size();
+    String cedula;
+    Cliente cli;
+    Mascota mas;
+    String fechaMC;
+    String horaMC;
+    String nombreC;
+    String nombreM;
+    
+    public void buscarInformacion(){ 
+        cedula = t1.getText();
+        
+        cli = cc.cliBuscar(con, cedula);
+        mas = (Mascota) cli.getMascotas();
+
+        int n = cli.getMascotas().size();
         
         for(int i = 0; i < n; i++){
-            ac.addItem(cm.masObtenerTodos(con).get(i).getMascotaNombre());
+            
+            if(mas.getCitas() != null){
+                Object fila[] = new Object[4];
+                
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                fechaMC = formato.format(mas.getCitas().get(i).getCitaFecha());
+                System.out.println(fechaMC);
+                
+                formato = new SimpleDateFormat("HH.mm.ss");
+                horaMC = formato.format(mas.getCitas().get(i).getCitaFecha());
+                System.out.println(horaMC);
+                
+                fila[0] = fechaMC;
+                
+                nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
+                fila[1] = nombreC;
+                
+                nombreM = mas.getMascotaNombre();
+                fila[2] = nombreM;
+                
+                fila[3] = false;
+
+                dt.addRow(fila);
+            }   
         } 
     }
     
-    String nombreM;
     
-    public void buscarMascota(){ 
-        nombreM = t1.getText();
-        
-        int n = cm.masObtenerNombre(con, nombreM).size();
-        
-        for(int i = 0; i < n; i++){
-            Object fila[] = new Object[4];
-            fila[0] = cm.masObtenerNombre(con, nombreM).get(i).getCitas().get(i).getCitaFecha();
-            fila[1] = 
-            fila[2] = cm.masObtenerNombre(con, nombreM).get(i).getMascotaNombre();
-            fila[3] = false;
-
-            dt.addRow(fila);
+    public void editarCita(){ 
+        for(int i = 0; i < tb1.getRowCount(); i++){
+            System.out.println("Check: " + tb1.getValueAt(i, 3));
+            if((boolean)tb1.getValueAt(i, 3) == true){
+                llamarVentanaCita(getDesktopPane());
+            }
         }
-        
     }
     
-    public void mostrar(){
-        int n = cm.masObtenerTodos(con).size();
+    public void llamarVentanaCita(JDesktopPane escritorio){
+        VRealizarCita vrc = new VRealizarCita(con, cca, cc, cm, cct);
+        vrc.setVisible(true);
+        this.setVisible(false);
         
-        for(int i = 0; i < n; i++){
-            Object fila[] = new Object[3];
-            fila[0] = cm.masObtenerTodos(con).get(i).getCitas().get(i).getCitaFecha();
-            fila[1] = false;
-
-            dt.addRow(fila);
-        }
-        
+        escritorio.add(vrc);
     }
+    
+    
+    public void eliminarCita(){
+        
+        for(int i = 0; i < tb1.getRowCount(); i++){
+            System.out.println("Check: " + tb1.getValueAt(i, 3));
+            if((boolean)tb1.getValueAt(i, 3) == true){
+                
+            }
+        }
+    }
+    
+
     
 }

@@ -204,19 +204,22 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         }
     }
     
+    Cliente cli;
+    
     public void buscarCliente(){
         cedula = t1.getText();
+        cli = cc.cliBuscar(con, cedula);
         
         try {
             if(cca.verificarCedula(cedula) == true){
-                if(cc.cliBuscar(con, cedula).getPersonaCedula().equals(cedula)){
+                if(cli.getPersonaCedula().equals(cedula)){
                     nombreC = cc.cliBuscar(con, cedula).getPersonaNombre();
                     l2.setText(nombreC);
                     
-                    telefonoC = cc.cliBuscar(con, cedula).getPersonaTelefono();
+                    telefonoC = cli.getPersonaTelefono();
                     l3.setText(telefonoC);
                     
-                    direccionC = cc.cliBuscar(con, cedula).getPersonaDireccion();
+                    direccionC = cli.getPersonaDireccion();
                     l4.setText(direccionC); 
                     
                     mostrar();
@@ -232,8 +235,6 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     }
     
     public void mostrar(){
-        Cliente cli;
-        cli = cc.cliBuscar(con, cedula);
         
         int n = cm.masObtener(con, cli.getClienteId()).size();
         

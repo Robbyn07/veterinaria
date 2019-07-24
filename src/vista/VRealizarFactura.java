@@ -20,6 +20,9 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
@@ -35,6 +38,10 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import modelo.Cliente;
+import modelo.FacturaCabecera;
+import modelo.FacturaDetalle;
+import modelo.Producto;
 
 /**
  *
@@ -65,20 +72,19 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     
     
     public void initComponentes(){
-        setSize(800,500);
+        setSize(800,550);
         setTitle("Realizar Factura");
     }
     
     DefaultTableModel dt;
     private JTable tb1;
     private JScrollPane scr;
-    private boolean[] editable = {false, true, false, false};
+    private boolean[] editable = {false, false, false, false};
     
     private int dia;
     private int mes;
     private int anio;
 
-    private static int id = 1;
     private String cedula; 
     
     private JButton b1;
@@ -96,11 +102,11 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     private JTextField t4;
     private JTextField t5;
     private JTextField t6;
+    private JTextField t7;
     private TextAutoCompleter ac;
     
     
     public void ventanaRealizarFac(){
-        
         anio = fecha.get(Calendar.YEAR);
         mes = fecha.get(Calendar.MONTH);
         dia = fecha.get(Calendar.DAY_OF_MONTH);
@@ -169,7 +175,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g1.gridy =2;
         p1.add(l9, g1);
         
-        JLabel l10 = new JLabel("Teléfono: ");
+        JLabel l10 = new JLabel("Dirección: ");
         g1.gridx =0;
         g1.gridy =3;
         p1.add(l10, g1);
@@ -188,21 +194,37 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         p2.setBorder(title1);
         
         JPanel p3 = new JPanel(); 
-        p3.setLayout(new FlowLayout());
-        
+        p3.setLayout(new GridBagLayout());
+        GridBagConstraints g2 = new GridBagConstraints();
         auto();
         
         JLabel l12 = new JLabel("Producto:");
-        p3.add(l12) ;
+        g2.gridx = 0;
+        g2.gridy = 0;
+        p3.add(l12, g2) ;
         
         t2 = new JTextField(12);
         ac = new TextAutoCompleter(t2);
-        p3.add(t2);
+        g2.gridx = 1;
+        g2.gridy = 0;
+        p3.add(t2, g2);
+        
+        JLabel l13 = new JLabel("Cantidad:");
+        g2.gridx = 0;
+        g2.gridy = 1;
+        p3.add(l13, g2) ;
+        
+        t3 = new JTextField(12);
+        g2.gridx = 1;
+        g2.gridy = 1;
+        p3.add(t3, g2);
         
         b2 = new JButton("Agregar");
         b2.addActionListener(this);
         b2.setActionCommand("agregar");
-        p3.add(b2);
+        g2.gridx = 2;
+        g2.gridy = 1;
+        p3.add(b2, g2);
         
         JPanel p4 = new JPanel(); 
         p4.setLayout(new BorderLayout());
@@ -232,48 +254,51 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         p4.add(scr, BorderLayout.NORTH);
         
         JPanel p5 = new JPanel(); 
-        GridBagConstraints g2 = new GridBagConstraints(); 
+        GridBagConstraints g3 = new GridBagConstraints(); 
         p5.setLayout(new GridBagLayout());
         
-        JLabel l13 = new JLabel("Subtotal:");
+        JLabel l14 = new JLabel("Subtotal:");
         g2.gridx =0;
         g2.gridy =0;
-        p5.add(l13, g2);
-        
-        t3 = new JTextField(12);
-        g2.gridx =1;
-        g2.gridy =0;
-        p5.add(t3, g2);
-        
-        JLabel l14 = new JLabel("IVA(12%):");
-        g2.gridx =0;
-        g2.gridy =1;
-        p5.add(l14, g2);
+        p5.add(l14, g3);
         
         t4 = new JTextField(12);
+        t4.setEditable(false);
         g2.gridx =1;
-        g2.gridy =1;
-        p5.add(t4, g2);
+        g2.gridy =0;
+        p5.add(t4, g3);
         
-        JLabel l15 = new JLabel("Descuento:");
+        JLabel l15 = new JLabel("IVA(12%):");
         g2.gridx =0;
-        g2.gridy =2;
-        p5.add(l15, g2);
+        g2.gridy =1;
+        p5.add(l15, g3);
         
         t5 = new JTextField(12);
+        t5.setEditable(false);
         g2.gridx =1;
-        g2.gridy =2;
-        p5.add(t5, g2);
+        g2.gridy =1;
+        p5.add(t5, g3);
         
-        JLabel l16 = new JLabel("Total:");
+        JLabel l16 = new JLabel("Descuento:");
         g2.gridx =0;
-        g2.gridy =3;
-        p5.add(l16, g2);
+        g2.gridy =2;
+        p5.add(l16, g3);
         
         t6 = new JTextField(12);
         g2.gridx =1;
+        g2.gridy =2;
+        p5.add(t6, g3);
+        
+        JLabel l17 = new JLabel("Total:");
+        g2.gridx =0;
         g2.gridy =3;
-        p5.add(t6, g2);
+        p5.add(l17, g3);
+        
+        t7 = new JTextField(12);
+        t7.setEditable(false);
+        g2.gridx =1;
+        g2.gridy =3;
+        p5.add(t7, g3);
 
         p2.add(p3, BorderLayout.NORTH);
         p2.add(p4, BorderLayout.CENTER);
@@ -317,14 +342,21 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 break;
                 
             case "terminar":
-                llamarVentanaElegirMP(getDesktopPane());
+                terminarFactura();
                 break;
         }
     }
     
+    String ids;
+    int id;
+    
     public String generarNF(){
-        String ids = Integer.toString(id);
-        id++;
+        int n = cfc.cabObtener(con).size();
+        for(int i = 0; i < n; i++){
+            id = cfc.cabObtener(con).get(id).getFacturaCabeceraNumero();
+        }
+        
+        ids = Integer.toString(id);
         return ids;
     }
     
@@ -333,28 +365,32 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     private String telefono;
     private String direccion;
     
+    Cliente cli;
+    
     public void buscarCliente(){
         cedula = t1.getText();
         
         try {
             if(cca.verificarCedula(cedula) == true){
                 if(cc.cliBuscar(con, cedula).getPersonaCedula().equals(cedula)){
-                    nombre = cc.cliBuscar(con, cedula).getPersonaNombre();
-                    apellido = cc.cliBuscar(con, cedula).getPersonaApellido();
+                    cli = cc.cliBuscar(con,cedula);
+                            
+                    nombre = cli.getPersonaNombre();
+                    apellido = cli.getPersonaApellido();
                     l7.setText(nombre + " " + apellido);
 
-                    telefono = cc.cliBuscar(con, cedula).getPersonaTelefono();
+                    telefono = cli.getPersonaTelefono();
                     l9.setText(telefono);
 
-                    direccion = cc.cliBuscar(con, cedula).getPersonaDireccion();
+                    direccion = cli.getPersonaDireccion();
                     l11.setText(direccion);  
                 }else{
-                    JOptionPane.showMessageDialog(null,"Error","El cliente no"
-                            + " existe",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"El cliente no existe ",
+                            "Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(null,"Error","Verifique la cédula",
+            JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
         }
     }
@@ -372,33 +408,49 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     private double precioU;
     private double subtotalD;
     
+    Producto pro;
+    FacturaDetalle fd;
+    
     public void agregarProducto(){
+        fd = new FacturaDetalle();
+        pro = cpd.proBuscar(con, producto);
         producto = t2.getText();
+        cantidad = Integer.parseInt(t3.getText());
         
-        int n = cpd.proObtener(con).size();
-        
-        if(cpd.proBuscar(con, producto) != null){
-            precioU = cpd.proBuscar(con, nombre).getProductoPrecioVenta();
-            
-            Object fila[] = new Object[4];
-            fila[0] = cpd.proBuscar(con, producto).getProductoNombre();
-            fila[1] = cantidad;
-            fila[2] = precioU;
-            
-            for(int i = 0; i < tb1.getRowCount(); i++){
-                cantidad = (int) tb1.getValueAt(i, 1);
-                subtotalD = cantidad * precioU;
-                fila[3] = subtotalD; 
-                
-                this.updateUI();
+        if(pro != null){
+            if(cantidad == 0){
+                JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida",
+                        "Error",JOptionPane.ERROR_MESSAGE);
+            }else{
+                if(cantidad > pro.getProductoStock()){
+                    JOptionPane.showMessageDialog(null,"Revise el stock del producto",
+                        "Error",JOptionPane.ERROR_MESSAGE);
+                }else{
+                    Object fila[] = new Object[4];
+                    fila[0] = pro.getProductoNombre();
+                    fila[1] = cantidad;
+                    fila[2] = precioU;
+
+                    subtotalD = cantidad * precioU;
+                    fila[3] = subtotalD; 
+
+                    fd.setProducto(pro);
+                    fd.setFacturaDetalleCantidad(cantidad);
+                    fd.setFacturaDetallePrecioUnitario(precioU);
+                    fd.setFacturaDetalleSubtotal(subtotalD);
+                    int idFC = Integer.parseInt(ids);
+
+                    cfd.detAgregar(con, fd, idFC);
+
+                    dt.addRow(fila);
+                    completarCabecera();
+                }
+
             }
-            
-            dt.addRow(fila);
-            completarCabecera();
+
         }else{
             
         }
- 
     }
     
     private double subtotalC = 0;
@@ -407,39 +459,85 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     private double descuento;
     private double totalC;
     
+    
     public void completarCabecera(){
         for(int i = 0; i < tb1.getRowCount(); i++){
             test = (double) tb1.getValueAt(i, 3);
             test = subtotalC + test;
             subtotalC = test;
-        }
-        
-        try {
-            t3.setText(Double.toString(subtotalC));
-            iva = subtotalC * 0.12;
-            t4.setText(Double.toString(iva));
-            if(t5.getText() != null){
-                descuento = Double.parseDouble(t5.getText());
-                this.updateUI();
-            }else{
-                descuento = 0; 
+            
+            try {
+                t4.setText(Double.toString(subtotalC));
+               
+                iva = subtotalC * 0.12;
+                t5.setText(Double.toString(iva));
+                
+                if(t6.getText() != null){
+                    descuento = Double.parseDouble(t5.getText());
+                    this.updateUI();
+                }else{
+                    descuento = 0; 
+                }
+                totalC = subtotalC + iva + descuento;
+                t7.setText(Double.toString(totalC));
+
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-            totalC = subtotalC + iva + descuento;
-            t5.setText(Double.toString(totalC));
+        }
+    }
+    
+    private String fechaFC ;
+    
+    public void terminarFactura(){
+      
+        try {
+            String diaS = Integer.toString(dia);
+            String mesS = Integer.toString(mes);
+            String anioS = Integer.toString(anio);
+            fechaFC = diaS +"/"+ mesS +"/"+ anioS;
+            
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date dateN = formato.parse(fechaFC);
+            java.sql.Date fechaFinal = new java.sql.Date(dateN.getTime()); 
                     
-        } catch (Exception e) {
+            FacturaCabecera fc = new FacturaCabecera();
+            fc.setFacturaCabeceraFecha(fechaFinal);
+            fc.setCliente(cli);
+            fc.addFacturasDetalle(fd);
+            fc.setFacturaCabeceraSubtotal(subtotalC);
+            fc.setFacturaCabeceraIva(iva);
+            fc.setFacturaCabeceraDescuento(descuento);
+            fc.setFacturaCabeceraTotal(totalC);
+            cfc.cabAgregar(con, fc);
+            
+            Object[] options = {"Efectivo",
+                                "Tarjeta"};
+            int n = JOptionPane.showOptionDialog(null,"Eliga el método de pago",
+                    "A Silly Question",JOptionPane.YES_NO_OPTION,
+                    JOptionPane.INFORMATION_MESSAGE,null,
+                    options,
+                    options[0]);
+
+            if(n == 0){
+                fc.setFacturaCabeceraTipoPago("EFECTIVO");
+                //método para actualizar pago
+            }else{
+                fc.setFacturaCabeceraTipoPago("TARJETA");
+                //método para actualizar pago
+                llamarVentanaPagoTarjeta(getDesktopPane());
+            } 
+            
+        } catch (ParseException e) {
             e.printStackTrace();
         }
-        
     }
     
     
-    
-    public void llamarVentanaElegirMP(JDesktopPane escritorio){
-        VMetodoPago vmp = new VMetodoPago();
-        vmp.setVisible(true);
-        setVisible(false);
+    public void llamarVentanaPagoTarjeta(JDesktopPane escritorio){
+        VPagoTarjeta vpt = new VPagoTarjeta();
+        vpt.setVisible(true);
         
-        escritorio.add(vmp);
+        escritorio.add(vpt);
     }
 }

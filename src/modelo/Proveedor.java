@@ -11,7 +11,6 @@ public class Proveedor {
     private String proveedorRuc;
     private String proveedorEmail;
     private String proveedorDireccion;
-    private String proveedorEstado;
 
     public int getProveedorId() {
         return proveedorId;
@@ -52,14 +51,5 @@ public class Proveedor {
     public void setProveedorDireccion(String proveedorDireccion) {
         this.proveedorDireccion = proveedorDireccion;
     }
-
-    public String getProveedorEstado() {
-        return proveedorEstado;
-    }
-
-    public void setProveedorEstado(String proveedorEstado) {
-        this.proveedorEstado = proveedorEstado;
-    }
-    
-    
+ 
 }

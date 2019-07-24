@@ -29,8 +29,8 @@ public class ControladorFacturaDetalle {
         
         try {
             sentencia = con.getConexion().prepareStatement("SELECT DISTINCT(P.PRO_NOMBRE), G.PRO_ID, G.FDE_CANTIDAD "+
-            "FROM VETERINARIA.VET_PRODUCTOS P, (SELECT PRO_ID, SUM(FDE_CANTIDAD) FDE_CANTIDAD\n" +
-            "FROM VETERINARIA.VET_FACTURA_DETALLES D \n" +
+            "FROM VETERINARIA.VET_PRODUCTOS P, (SELECT PRO_ID, SUM(FDE_CANTIDAD) FDE_CANTIDAD " +
+            "FROM VETERINARIA.VET_FACTURA_DETALLES D " +
             "GROUP BY PRO_ID " +
             "ORDER BY 1 DESC) G "+
             "WHERE P.PRO_ID = G.PRO_ID " +
@@ -48,7 +48,6 @@ public class ControladorFacturaDetalle {
                 list.add(Integer.toString(cant));
                 
                 lista.add(list);
-                
             }
             
             return lista;
@@ -61,6 +60,9 @@ public class ControladorFacturaDetalle {
         }
         
     }
+
+
+
     public List<FacturaDetalle> detObtener(Conexion con, int facturaCabeceraNumero){
         FacturaDetalle facturaDetalle = new FacturaDetalle();
         ControladorProducto controladorProducto = new ControladorProducto();
@@ -134,7 +136,8 @@ public class ControladorFacturaDetalle {
         if(detBuscar(con, facturaDetalle.getFacturaDetalleId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_factura_Detalles VALUES (fde_id_seq.nextval,?,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_factura_Detalles "
+                        + "VALUES (fde_id_seq.nextval,?,?,?,?,?)");
 
                 //sentencia.setInt(1, facturaDetalle.getFacturaDetalleId());
                 sentencia.setInt(1, facturaDetalle.getFacturaDetalleCantidad());

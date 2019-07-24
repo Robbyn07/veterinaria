@@ -223,6 +223,31 @@ public class ControladorFacturaCabecera {
           
     }
     
+    public boolean cabEditarMetodoPago (Conexion con, FacturaCabecera facturaCabecera){
+        try {
+
+            sentencia = con.getConexion().prepareStatement("UPDATE vet_factura_Cabeceras SET "
+            + "fac_metodop=? "
+            + "WHERE fac_numerof=?");
+
+            sentencia.setString(1, facturaCabecera.getFacturaCabeceraTipoPago());
+            sentencia.setInt(2, facturaCabecera.getFacturaCabeceraNumero());
+
+
+            sentencia.executeUpdate();
+
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+            
+        
+        
+    }
+    
+    
     
 }
 

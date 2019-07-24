@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package vista;
 
 import com.mxrck.autocompleter.TextAutoCompleter;
@@ -472,14 +468,13 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 iva = subtotalC * 0.12;
                 t5.setText(Double.toString(iva));
                 
-                if(t6.getText() != null){
-                    descuento = Double.parseDouble(t5.getText());
-                    this.updateUI();
-                }else{
-                    descuento = 0; 
-                }
-                totalC = subtotalC + iva + descuento;
-                t7.setText(Double.toString(totalC));
+                t6.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        descuento = Double.parseDouble(t6.getText()); 
+                        totalC = subtotalC + iva - descuento;
+                        t7.setText(Double.toString(totalC));
+                    }
+                });
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();

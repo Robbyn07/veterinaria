@@ -83,10 +83,7 @@ public class ControladorRecetaDetalle {
         }
         
     }
-    
-    
-    
-    
+
     public boolean recDetAgregar(Conexion con, RecetaDetalle recetaDetalle, int recetaCabeceraId){
         
         if(recDetBuscar(con, recetaDetalle.getRecetaDetalleId())==null){

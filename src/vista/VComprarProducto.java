@@ -155,17 +155,16 @@ public class VComprarProducto extends JInternalFrame implements ActionListener{
             Producto pro;
             pro = cpd.proBuscar(con, producto);
             pro.setProductoPrecioCompra(precioC);
+            pro.setProductoEstado("A");
             
-            if(cpd.proBuscar(con, producto).getProductoNombre().equals(producto)){
+            if(pro.getProductoNombre().toUpperCase().equals(producto.toUpperCase())){
                 
-                int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+                int res = JOptionPane.showConfirmDialog(null,"Confirmacion",
+                "Desea Confirmar la acción?",JOptionPane.YES_NO_OPTION);
         
-                if(res == 0){
+                if(res == JOptionPane.YES_OPTION){
                     if(cpd.agregarStock(con,pro, cantidad) == true){
-                        
-                        cpd.proEditar(con, pro);
-                        
+                   
                         JOptionPane.showMessageDialog(null, "Se compró "+ cantidad +" de "
                         + producto + ", al precio de " + (precioC * cantidad));
                     }   

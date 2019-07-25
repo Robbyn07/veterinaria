@@ -190,6 +190,35 @@ public class ControladorCita {
     }
 
     
+    
+    public int buscarMascotaId(Conexion con, int citaId){
+        int masId=0;
+        try {
+            sentencia = con.getConexion().prepareStatement("SELECT mas_id "
+            + "FROM vet_citas "
+            + "WHERE cit_id = ?");
+            sentencia.setInt(1, citaId);
+            resultado= sentencia.executeQuery();
+
+            //Se presenta el resultado
+            while(resultado.next()){
+                
+                masId = resultado.getInt("mas_id");
+                
+            }
+            
+            return masId;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+            return 0;
+            
+        }
+        
+    }
+    
+    
 }
 
 

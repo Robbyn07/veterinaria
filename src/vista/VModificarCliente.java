@@ -46,7 +46,6 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
     private JButton b1;
     private JButton b2;
     private JButton b3;
-    private JButton b4;
     private JTextField t1;
     private JTextField t2;
     private JTextField t3;
@@ -129,6 +128,7 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         b2 = new JButton("Volver");
         g1.gridx = 0;
         g1.gridy = 6;
+        g1.gridwidth = 2;
         b2.addActionListener(this);
         b2.setActionCommand("volver");
         cp.add(b2, g1);
@@ -136,16 +136,10 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         b3 = new JButton("Editar");
         g1.gridx = 1;
         g1.gridy = 6;
+        g1.gridwidth = 2;
         b3.addActionListener(this);
         b3.setActionCommand("editar");
         cp.add(b3, g1);
-        
-        b4 = new JButton("Eliminar");
-        g1.gridx = 2;
-        g1.gridy = 6;
-        b4.addActionListener(this);
-        b4.setActionCommand("eliminar");
-        cp.add(b4, g1);
     }
 
     @Override
@@ -164,7 +158,6 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
                 
             case "editar":
                 editarCliente();
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;
         }
     }
@@ -197,47 +190,48 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         return v;
     }
     
+    Cliente cli;
+    
     public void buscarCliente(){
         cedula = t1.getText();
         
+        cli = cc.cliBuscar(con, cedula);
+        
         try {
             if(cca.verificarCedula(cedula) == true){
-                if(cc.cliBuscar(con, cedula).getPersonaCedula().equals(cedula)){
+                if(cli.getPersonaCedula().equals(cedula)){
                     nombre = cc.cliBuscar(con, cedula).getPersonaNombre();
                     t2.setText(nombre);
 
-                    apellido = cc.cliBuscar(con, cedula).getPersonaApellido();
+                    apellido = cli.getPersonaApellido();
                     t3.setText(apellido);
 
-                    telefono = cc.cliBuscar(con, cedula).getPersonaTelefono();
+                    telefono = cli.getPersonaTelefono();
                     t4.setText(telefono);
 
-                    email = cc.cliBuscar(con, cedula).getPersonaEmail();
+                    email = cli.getPersonaEmail();
                     t5.setText(email);
 
-                    direccion = cc.cliBuscar(con, cedula).getPersonaDireccion();
+                    direccion = cli.getPersonaDireccion();
                     t6.setText(direccion);  
                 }else{
-                    JOptionPane.showMessageDialog(null,"Error","El cliente no"
-                            + " existe",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"El cliente no existe",
+                            "Error",JOptionPane.ERROR_MESSAGE);
                 }
             }
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(null,"Error","Verifique la cédula",
+            JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
         }
     }
     
     public void editarCliente(){
-        cedula = t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
         telefono = t4.getText();
         email = t5.getText();
         direccion = t6.getText();
         
-        Cliente cli;
-        cli = cc.cliBuscar(con, cedula);
         cli.setPersonaNombre(nombre);
         cli.setPersonaApellido(apellido);
         cli.setPersonaTelefono(telefono);
@@ -251,8 +245,8 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
             if(cc.cliEditar(con, cli) == true){
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
             }else{
-                JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
-                        + "la operación",JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(null,"No se completó la opración"
+                        ,"Error",JOptionPane.ERROR_MESSAGE); 
             }
         }else{
             

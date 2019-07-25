@@ -73,7 +73,7 @@ public class VMedico extends JFrame implements ActionListener{
              
     }
     private void initComponentes() {
-        setSize(1100,800);
+        setSize(1600,800);
         setTitle("Ventana Medico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -90,21 +90,26 @@ public class VMedico extends JFrame implements ActionListener{
             //Ingresa items en la opcion
             JMenuItem i1 = new JMenuItem("Diagnostico");
             i1.addActionListener(this);
-            i1.setActionCommand("DiagnosticoM");
+            i1.setActionCommand("diagnosticoM");
             m1.add(i1);
             
             JMenuItem i2 = new JMenuItem("Historial");
             i2.addActionListener(this);
-            i2.setActionCommand("HistorialM");
+            i2.setActionCommand("historialM");
             m1.add(i2);
             
         barra.add(m1);
         
-        JMenu m2 = new JMenu("Cerrar Sesion");
+        JMenu m2 = new JMenu("Cuenta");
             //Ingresa items en la opcion
-            JMenuItem i4 = new JMenuItem("Cerrar");
+            JMenuItem i3 = new JMenuItem("Cambiar Contraseña");
+            i3.addActionListener(this);
+            i3.setActionCommand("cambiarC");
+            m2.add(i3);
+            
+            JMenuItem i4 = new JMenuItem("Cerrar Sesión");
             i4.addActionListener(this);
-            i4.setActionCommand("CerrarS");
+            i4.setActionCommand("cerrarS");
             m2.add(i4);
         barra.add(m2);   
         setJMenuBar(barra);
@@ -117,15 +122,19 @@ public class VMedico extends JFrame implements ActionListener{
         System.out.println("Comando: "+ comando);
         
         switch(comando){
-            case "DiagnosticoM":
+            case "diagnosticoM":
                 llamarVentanaDiagnosticoM();
                 break;
             
-            case "HistorialM":
+            case "historialM":
                 llamarVentanaHistorialM();
                 break;
             
-            case "CerrarS":
+            case "cambiarC":
+                llamarVentanaHistorialM();
+                break;    
+                
+            case "cerrarS":
                 llamarVentanaCerrarS();
                 con.cerrarConexion();
                 break;
@@ -134,7 +143,7 @@ public class VMedico extends JFrame implements ActionListener{
     }
 
     private void llamarVentanaDiagnosticoM() {
-        VDiagnostico vD = new VDiagnostico();
+        VDiagnostico vD = new VDiagnostico(con,cem,cc,cm,ces,cr,cct,cd);
         vD.setVisible(true);
         
         escritorioM.add(vD);
@@ -162,7 +171,7 @@ public class VMedico extends JFrame implements ActionListener{
                 cfc,cfd,cd,crc,crd);
         vIS.setVisible(true);
         
-        setVisible(false);
+        this.setVisible(false);
     }
                    
 }

@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cita;
 import modelo.Empleado;
 
@@ -26,28 +28,35 @@ public class ControladorEmpleado {
     
     public Empleado empBuscar(Conexion con, String cedula){
         Empleado empleado = new Empleado();
+        
+        /*
+        HAY QUE HACER DISPARADOR PARA INGRESO DE USUARIOS
+        */
         try {
             sentencia = con.getConexion().prepareStatement("SELECT emp_id, emp_nombre, emp_apellido, emp_cedula, emp_telefono, "
                     + "emp_direccion, emp_email, emp_cargo, emp_username, emp_contrasena "
-                    + "FROM vet_empleados "
+                    + "FROM VETERINARIA.vet_empleados "
                     + "WHERE emp_cedula = ?");
             sentencia.setString(1, cedula);
             resultado= sentencia.executeQuery();
 
-            //Se presenta el resultado
-            while(resultado.next()){
-                empleado.setEmpleadoId(resultado.getInt("emp_id"));
-                empleado.setPersonaNombre(resultado.getString("emp_nombre"));
-                empleado.setPersonaApellido(resultado.getString("emp_apellido"));
-                empleado.setPersonaCedula(resultado.getString("emp_cedula"));
-                empleado.setPersonaTelefono(resultado.getString("emp_telefono"));
-                empleado.setPersonaDireccion(resultado.getString("emp_direccion"));
-                empleado.setPersonaEmail(resultado.getString("emp_email"));
-                empleado.setEmpleadoPermiso(resultado.getString("emp_cargo"));
-                empleado.setEmpleadoUsername(resultado.getString("emp_username"));
-                empleado.setEmpleadoContrasena(resultado.getString("emp_contrasena"));
+            if(resultado.next()==false){
+                empleado=null;
+            }else{
+                do{
+                    empleado.setEmpleadoId(resultado.getInt("emp_id"));
+                    empleado.setPersonaNombre(resultado.getString("emp_nombre"));
+                    empleado.setPersonaApellido(resultado.getString("emp_apellido"));
+                    empleado.setPersonaCedula(resultado.getString("emp_cedula"));
+                    empleado.setPersonaTelefono(resultado.getString("emp_telefono"));
+                    empleado.setPersonaDireccion(resultado.getString("emp_direccion"));
+                    empleado.setPersonaEmail(resultado.getString("emp_email"));
+                    empleado.setEmpleadoPermiso(resultado.getString("emp_cargo"));
+                    empleado.setEmpleadoUsername(resultado.getString("emp_username"));
+                    empleado.setEmpleadoContrasena(resultado.getString("emp_contrasena"));
+                }while(resultado.next());
             }
-            
+           
             return empleado;
             
         } catch (SQLException e) {
@@ -107,20 +116,23 @@ public class ControladorEmpleado {
             sentencia.setInt(1, id);
             resultado= sentencia.executeQuery();
 
-            //Se presenta el resultado
-            while(resultado.next()){
-                empleado.setEmpleadoId(resultado.getInt("emp_id"));
-                empleado.setPersonaNombre(resultado.getString("emp_nombre"));
-                empleado.setPersonaApellido(resultado.getString("emp_apellido"));
-                empleado.setPersonaCedula(resultado.getString("emp_cedula"));
-                empleado.setPersonaTelefono(resultado.getString("emp_telefono"));
-                empleado.setPersonaDireccion(resultado.getString("emp_direccion"));
-                empleado.setPersonaEmail(resultado.getString("emp_email"));
-                empleado.setEmpleadoPermiso(resultado.getString("emp_cargo"));
-                empleado.setEmpleadoUsername(resultado.getString("emp_username"));
-                empleado.setEmpleadoContrasena(resultado.getString("emp_contrasena"));
+            if(resultado.next()==false){
+                empleado=null;
+            }else{
+                do{
+                    empleado.setEmpleadoId(resultado.getInt("emp_id"));
+                    empleado.setPersonaNombre(resultado.getString("emp_nombre"));
+                    empleado.setPersonaApellido(resultado.getString("emp_apellido"));
+                    empleado.setPersonaCedula(resultado.getString("emp_cedula"));
+                    empleado.setPersonaTelefono(resultado.getString("emp_telefono"));
+                    empleado.setPersonaDireccion(resultado.getString("emp_direccion"));
+                    empleado.setPersonaEmail(resultado.getString("emp_email"));
+                    empleado.setEmpleadoPermiso(resultado.getString("emp_cargo"));
+                    empleado.setEmpleadoUsername(resultado.getString("emp_username"));
+                    empleado.setEmpleadoContrasena(resultado.getString("emp_contrasena"));
+                }while(resultado.next());
             }
-            
+           
             return empleado;
             
         } catch (SQLException e) {
@@ -137,23 +149,30 @@ public class ControladorEmpleado {
         if(empBuscar(con, empleado.getPersonaCedula())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_empleados VALUES (emp_id_seq.nextval,?,?,?,?,?,?,?,?,?)");
+                if(creacionEmpleado(con, empleado)){
+                    sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_empleados VALUES (emp_id_seq.nextval,?,?,?,?,?,?,?,?,?,?)");
 
-                //sentencia.setInt(1, empleado.getEmpleadoId());
-                sentencia.setString(1, empleado.getPersonaCedula());
-                sentencia.setString(2, empleado.getPersonaNombre());
-                sentencia.setString(3, empleado.getPersonaApellido());
-                sentencia.setString(4, empleado.getEmpleadoPermiso());
-                sentencia.setString(5, empleado.getPersonaTelefono());
-                sentencia.setString(6, empleado.getPersonaEmail());
-                sentencia.setString(7, empleado.getPersonaDireccion());
-                sentencia.setString(8, empleado.getEmpleadoUsername());
-                sentencia.setString(9, empleado.getEmpleadoContrasena());
+                    //sentencia.setInt(1, empleado.getEmpleadoId());
+                    sentencia.setString(1, empleado.getPersonaCedula());
+                    sentencia.setString(2, empleado.getPersonaNombre().toUpperCase());
+                    sentencia.setString(3, empleado.getPersonaApellido().toUpperCase());
+                    sentencia.setString(4, empleado.getEmpleadoPermiso().toUpperCase());
+                    sentencia.setString(5, empleado.getPersonaTelefono());
+                    sentencia.setString(6, empleado.getPersonaEmail().toUpperCase());
+                    sentencia.setString(7, empleado.getPersonaDireccion().toUpperCase());
+                    sentencia.setString(8, empleado.getEmpleadoUsername());
+                    sentencia.setString(9, empleado.getEmpleadoContrasena());
+                    sentencia.setString(10, "A");
 
-                sentencia.executeUpdate();
+                    sentencia.executeUpdate();
 
-                return true;
+                    return true;
                 
+                }else{
+                    return false;
+                }
+                
+
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
@@ -348,6 +367,29 @@ public class ControladorEmpleado {
         }
         
     }
+    
+     public boolean creacionEmpleado(Conexion con, Empleado empleado){
+        
+        try {
+            System.out.println("manda a crear usuario empleado");
+            sentencia = con.getConexion().prepareStatement("CREATE USER ? "
+                    + "IDENTIFIED BY ? "
+                    + "GRANT EMPLEADOS TO ?");
+            
+                sentencia.setString(1, empleado.getEmpleadoUsername());
+                sentencia.setString(2, empleado.getEmpleadoContrasena());
+                sentencia.setString(3, empleado.getEmpleadoUsername());
+                
+                sentencia.executeUpdate();
+                
+                 } catch (SQLException ex) {
+            Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+
+
     
     
     

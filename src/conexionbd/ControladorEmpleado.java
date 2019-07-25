@@ -312,6 +312,45 @@ public class ControladorEmpleado {
           
     }
     
+    
+    
+    public Empleado empBuscarUsername(Conexion con, String username){
+        Empleado empleado = new Empleado();
+        try {
+            sentencia = con.getConexion().prepareStatement("SELECT emp_id, emp_nombre, emp_apellido, emp_cedula, emp_telefono, "
+                    + "emp_direccion, emp_email, emp_cargo, emp_username, emp_contrasena "
+                    + "FROM vet_empleados "
+                    + "WHERE emp_username = ?");
+            sentencia.setString(1, username);
+            resultado= sentencia.executeQuery();
+
+            //Se presenta el resultado
+            while(resultado.next()){
+                empleado.setEmpleadoId(resultado.getInt("emp_id"));
+                empleado.setPersonaNombre(resultado.getString("emp_nombre"));
+                empleado.setPersonaApellido(resultado.getString("emp_apellido"));
+                empleado.setPersonaCedula(resultado.getString("emp_cedula"));
+                empleado.setPersonaTelefono(resultado.getString("emp_telefono"));
+                empleado.setPersonaDireccion(resultado.getString("emp_direccion"));
+                empleado.setPersonaEmail(resultado.getString("emp_email"));
+                empleado.setEmpleadoPermiso(resultado.getString("emp_cargo"));
+                empleado.setEmpleadoUsername(resultado.getString("emp_username"));
+                empleado.setEmpleadoContrasena(resultado.getString("emp_contrasena"));
+            }
+            
+            return empleado;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+            return null;
+            
+        }
+        
+    }
+    
+    
+    
 }
 
 

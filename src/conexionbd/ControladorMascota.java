@@ -369,6 +369,37 @@ public class ControladorMascota {
             return false;
         
     }
+    
+    
+    
+    public int buscarClienteId(Conexion con, int masId){
+        int cliId=0;
+        try {
+            sentencia = con.getConexion().prepareStatement("SELECT cli_id "
+            + "FROM vet_mascotas "
+            + "WHERE mas_id = ?");
+            sentencia.setInt(1, masId);
+            resultado= sentencia.executeQuery();
+
+            //Se presenta el resultado
+            while(resultado.next()){
+                
+                cliId = resultado.getInt("cli_id");
+                
+            }
+            
+            return cliId;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+            return 0;
+            
+        }
+        
+    }
+    
+    
 
 }
 

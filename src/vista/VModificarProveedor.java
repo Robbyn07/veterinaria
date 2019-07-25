@@ -86,7 +86,7 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
         g1.gridy =2;
         cp.add(l3, g1);
         
-        JTextField t3 = new JTextField(12);
+        t3 = new JTextField(12);
         g1.gridx =1;
         g1.gridy =2;
         cp.add(t3, g1);
@@ -96,7 +96,7 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
         g1.gridy =3;
         cp.add(l4, g1);
         
-        JTextField t4 = new JTextField(12);
+        t4 = new JTextField(12);
         g1.gridx =1;
         g1.gridy =3;
         cp.add(t4, g1);
@@ -113,6 +113,14 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
         g1.gridy = 4;
         b3.addActionListener(this);
         b3.setActionCommand("editar");
+        cp.add(b3, g1);
+        
+        b4 = new JButton("Eliminar");
+        g1.gridx = 2;
+        g1.gridy = 4;
+        b4.addActionListener(this);
+        b4.setActionCommand("eliminar");
+        cp.add(b4, g1); 
         
     }
     
@@ -133,6 +141,10 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
             case "editar":
                 editarProveedor();
                 break;
+                
+            case "eliminar":
+                eliminarProveedor();
+                break;
         }
     }
     
@@ -144,15 +156,17 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
     
     public void buscarProveedor(){
         ruc = t1.getText();
-        
-        if(cpv.pvdBuscar(con, ruc).getProveedorRuc().equals(ruc)){
-           razonS = cpv.pvdBuscar(con, ruc).getProveedorRazonSocial();
+        Proveedor proveedor = cpv.pvdBuscar(con, ruc);
+        if(proveedor.getProveedorRuc().equals(ruc)){
+            
+           razonS = proveedor.getProveedorRazonSocial();
             t2.setText(razonS);
 
-            email = cpv.pvdBuscar(con, ruc).getProveedorEmail();
+            System.out.println("Email= "+proveedor.getProveedorEmail());
+            email = proveedor.getProveedorEmail();
             t3.setText(email);
 
-            direccion = cpv.pvdBuscar(con, ruc).getProveedorDireccion();
+            direccion = proveedor.getProveedorDireccion();
             t4.setText(direccion); 
         }else{
             JOptionPane.showMessageDialog(null,"Error","El proveedor no"
@@ -174,18 +188,37 @@ public class VModificarProveedor extends JInternalFrame implements ActionListene
         pv.setProveedorDireccion(direccion);
         
         int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+                "Confirmacion",JOptionPane.YES_NO_OPTION);
         
-        if(res == 0){
+        if(res == JOptionPane.YES_OPTION){
             if(cpv.pvdEditar(con, pv) == true){
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
             }else{
-                JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
-                        + "la operación",JOptionPane.ERROR_MESSAGE); 
+                JOptionPane.showMessageDialog(null,"No se pudo completar la Operacion","Error "
+                ,JOptionPane.ERROR_MESSAGE); 
             }
         }else{
             
         }
     }
-
+    
+    public void eliminarProveedor(){
+        ruc = t1.getText();
+        
+        int res = JOptionPane.showConfirmDialog(null,"Confirmacion",
+                "Desea Confirmar la acción?",JOptionPane.YES_NO_OPTION);
+        
+        if(res == JOptionPane.YES_OPTION){
+            if(cpv.cancelarProveedor(con, cpv.pvdBuscar(con, ruc)) == true){
+                JOptionPane.showMessageDialog(null, "Operación Exitosa");
+            }else{
+                JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
+                        + "la operación",
+                    JOptionPane.ERROR_MESSAGE); 
+            }
+        }else{
+            
+        }
+        
+    }  
 }

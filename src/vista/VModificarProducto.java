@@ -157,11 +157,13 @@ public class VModificarProducto extends JInternalFrame implements ActionListener
                 break;
                 
             case "editar":
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
+                editarProducto();
+                //JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;
                 
             case "eliminar":
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
+                eliminarProducto();
+                //JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;
         }
     }
@@ -175,16 +177,16 @@ public class VModificarProducto extends JInternalFrame implements ActionListener
     
     public void buscarProducto(){
         nombre = t1.getText();
-        
-        if(cpd.proBuscar(con, nombre).getProductoNombre().equals(nombre)){
+        Producto producto= cpd.proBuscar(con, nombre);
+        if(producto.getProductoNombre().toUpperCase().equals(nombre.toUpperCase())){
             
-            categoria = cpd.proBuscar(con, nombre).getProductoCategoria();
+            categoria = producto.getProductoCategoria();
             cb1.setSelectedItem(categoria);
             
-            origen = cpd.proBuscar(con, nombre).getProductoOrigen();
+            origen = producto.getProductoOrigen();
             cb2.setSelectedItem(origen);
             
-            alianza = cpd.proBuscar(con, nombre).getProductoAlianza();
+            alianza = producto.getProductoAlianza();
             cb3.setSelectedItem(alianza);
             
         }else{
@@ -207,10 +209,10 @@ public class VModificarProducto extends JInternalFrame implements ActionListener
         pro.setProductoOrigen(origen);
         pro.setProductoAlianza(alianza);
         
-        int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(null,"Confirmacion",
+                "Desea Confirmar la acción?",JOptionPane.YES_NO_OPTION);
         
-        if(res == 0){
+        if(res == JOptionPane.YES_OPTION){
             if(cpd.proEditar(con, pro) == true){
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
             }else{
@@ -223,7 +225,33 @@ public class VModificarProducto extends JInternalFrame implements ActionListener
     }
     
     public void eliminarProducto(){
-       
+       nombre = t1.getText();
+        categoria = cb1.getSelectedItem().toString();
+        precioV = Double.parseDouble(t2.getText());
+        origen = cb2.getSelectedItem().toString();
+        alianza = cb3.getSelectedItem().toString();
+        
+        Producto pro;
+        pro = cpd.proBuscar(con, nombre);
+        pro.setProductoCategoria(categoria);
+        pro.setProductoPrecioVenta(precioV);
+        pro.setProductoOrigen(origen);
+        pro.setProductoAlianza(alianza);
+        
+        int res = JOptionPane.showConfirmDialog(null,"Confirmacion",
+                "Desea Confirmar la acción?",JOptionPane.YES_NO_OPTION);
+        
+        if(res == JOptionPane.YES_OPTION){
+            if(cpd.cancelarProducto(con, pro) == true){
+                JOptionPane.showMessageDialog(null, "Operación Exitosa");
+            }else{
+                JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
+                        + "la operación",
+                    JOptionPane.ERROR_MESSAGE); 
+            }
+        }else{
+            
+        }
         
     }
     

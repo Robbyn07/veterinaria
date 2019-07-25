@@ -25,26 +25,32 @@ public class ControladorProducto {
     public Producto proBuscar(Conexion con, String nombre){
         ControladorProveedor proveedor= new ControladorProveedor();
         Producto producto = new Producto();
+        //producto=null;
+        
         try {
             sentencia = con.getConexion().prepareStatement("SELECT pro_id, pro_nombre,pro_precioc,pro_preciov, " 
-                    +"pro_stock, pro_categoria, pro_origen, pro_alianza, pvd_id "
+                    +"pro_stock, pro_categoria, pro_origen, pro_alianza, prv_id "
             + "FROM VETERINARIA.vet_productos "
-            + "WHERE UPPER(pro_nombre) = UPPER(?)");
-            sentencia.setString(1, nombre);
+            + "WHERE UPPER(pro_nombre) = ?");
+            sentencia.setString(1, nombre.toUpperCase());
             resultado= sentencia.executeQuery();
 
             //Se presenta el resultado
-            while(resultado.next()){
-                producto.setProductoId(resultado.getInt("pro_id"));
-                producto.setProductoNombre(resultado.getString("pro_nombre"));
-                producto.setProductoPrecioCompra(resultado.getDouble("pro_precioc"));
-                producto.setProductoPrecioVenta(resultado.getDouble("pro_preciov"));
-                producto.setProductoStock(resultado.getInt("pro_stock"));
-                producto.setProductoCategoria(resultado.getString("pro_categoria"));
-                producto.setProductoOrigen(resultado.getString("pro_origen"));
-                producto.setProductoAlianza(resultado.getString("pro_alianza"));
-                int proveedorId = resultado.getInt("pvd_id");
-                producto.setProveedor(proveedor.pvdBuscarId(con, proveedorId));
+            if(resultado.next()==false){
+                producto=null;
+            }else{
+                do{
+                    producto.setProductoId(resultado.getInt("pro_id"));
+                    producto.setProductoNombre(resultado.getString("pro_nombre"));
+                    producto.setProductoPrecioCompra(resultado.getDouble("pro_precioc"));
+                    producto.setProductoPrecioVenta(resultado.getDouble("pro_preciov"));
+                    producto.setProductoStock(resultado.getInt("pro_stock"));
+                    producto.setProductoCategoria(resultado.getString("pro_categoria"));
+                    producto.setProductoOrigen(resultado.getString("pro_origen"));
+                    producto.setProductoAlianza(resultado.getString("pro_alianza"));
+                    int proveedorId = resultado.getInt("prv_id");
+                    producto.setProveedor(proveedor.pvdBuscarId(con, proveedorId));
+                }while(resultado.next());
             }
             
             return producto;
@@ -142,22 +148,24 @@ public class ControladorProducto {
      * Metodo para insetar paises
      */
     public boolean proAgregar(Conexion con, Producto producto){
-        
+        //System.out.println("Entra Metodo Agregar Producto");
         if(proBuscar(con, producto.getProductoNombre())==null){
+            //System.out.println("Entra consulta");
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_productos VALUES "
-                        + "(pro_id_seq.nextval,?,?,?,?,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO VETERINARIA.vet_productos VALUES "
+                        + "(VETERINARIA.pro_id_seq.nextval,?,?,?,?,?,?,?,?,?)");
 
                 //sentencia.setInt(1, producto.getProductoId());
-                sentencia.setString(1, producto.getProductoNombre());
+                sentencia.setString(1, producto.getProductoNombre().toUpperCase());
                 sentencia.setInt(2, producto.getProductoStock());
-                sentencia.setString(3, producto.getProductoCategoria());
+                sentencia.setString(3, producto.getProductoCategoria().toUpperCase());
                 sentencia.setDouble(4, producto.getProductoPrecioCompra());
                 sentencia.setDouble(5, producto.getProductoPrecioVenta());
                 sentencia.setString(6, producto.getProductoOrigen());
                 sentencia.setString(7, producto.getProductoAlianza());
-                sentencia.setInt(8, producto.getProveedor().getProveedorId());
+                sentencia.setString(8, producto.getProductoEstado());
+                sentencia.setInt(9, 1);
 
                 sentencia.executeUpdate();
 
@@ -175,17 +183,17 @@ public class ControladorProducto {
     
     public boolean proEditar(Conexion con, Producto producto){
         
-        if(proBuscar(con, producto.getProductoNombre())!=null){
+        
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_productos SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE VETERINARIA.vet_productos SET "
                 + "pro_precioc=?, pro_preciov=?, pro_stock=? "
                 + "WHERE pro_nombre=?");
 
                 sentencia.setDouble(1, producto.getProductoPrecioCompra());
                 sentencia.setDouble(2, producto.getProductoPrecioVenta());
                 sentencia.setInt(3, producto.getProductoStock());
-                sentencia.setString(4, producto.getProductoNombre());
+                sentencia.setString(4, producto.getProductoNombre().toUpperCase());
 
                 sentencia.executeUpdate();
 
@@ -195,10 +203,6 @@ public class ControladorProducto {
                 e.printStackTrace();
                 return false;
             }
-            
-        } else
-            return false;
-        
         
     }
     
@@ -253,14 +257,14 @@ public class ControladorProducto {
     }*/
     
     public boolean cancelarProducto (Conexion con, Producto producto){
-        if(proBuscarId(con, producto.getProductoId())!=null){
+       
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_productos SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_productos SET "
                 + "pro_estado=? "
                 + "WHERE pro_id=?");
 
-                sentencia.setString(1, producto.getProductoEstado());
+                sentencia.setString(1, "I");
                 sentencia.setInt(2, producto.getProductoId());
                 
                 sentencia.executeUpdate();
@@ -272,9 +276,6 @@ public class ControladorProducto {
                 return false;
             }
             
-        } else
-            return false;
-          
     }
     
     

@@ -5,21 +5,41 @@
  */
 package vista;
 
+import conexionbd.Conexion;
+import conexionbd.ControladorCita;
+import conexionbd.ControladorCliente;
+import conexionbd.ControladorDiagnostico;
+import conexionbd.ControladorEmpleado;
+import conexionbd.ControladorEspecie;
+import conexionbd.ControladorMascota;
+import conexionbd.ControladorRaza;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.*;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-
+import modelo.Cita;
+import modelo.Cliente;
+import modelo.Diagnostico;
+import modelo.Mascota;
 
 /**
  *
@@ -27,34 +47,71 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VDiagnostico extends JInternalFrame implements ActionListener{
    
-    private JButton ok;
-    private JButton ok1;
-    private JButton b1;
-    private JButton b2;
-    private JTextArea a1;
-    DefaultTableModel dt;
-    private JTable tb1;
-    private JTable tabla;
-    private JScrollPane scr;
-    private boolean[] editable = {false,true};
+    Conexion con;
+    ControladorEmpleado cem;
+    ControladorCliente cc;
+    ControladorMascota cm;
+    ControladorEspecie ces;
+    ControladorRaza cr;
+    ControladorCita cct;
+    ControladorDiagnostico cd;
     
-    public VDiagnostico(){
+    public VDiagnostico(Conexion con,ControladorEmpleado cem,ControladorCliente cc,
+            ControladorMascota cm,ControladorEspecie ces,ControladorRaza cr,
+            ControladorCita cct,ControladorDiagnostico cd){
+        this.con = con;
+        this.cem = cem;
+        this.cc = cc;
+        this.cm = cm;
+        this.ces = ces;
+        this.cr = cr;
+        this.cct = cct;
+        this.cd = cd;
         initComponentes();
         ventanaDiagnostico();
            
     }
     private void initComponentes() {
-        setSize(1100, 600);
+        setSize(1000, 600);
         setTitle("Diagnosticos");
         setClosable(true);
-        setMaximizable(true);
     }
+    
+    DefaultTableModel dt;
+    private JTable tb1;
+    private JScrollPane scr1;
+    private JScrollPane scr2;
+    private boolean[] editable = {false, false, false};
+    
+    private JButton b1;
+    private JButton b2;
+    private JButton b3;
+    private JLabel l2;
+    private JLabel l3;
+    private JLabel l4;
+    private JLabel l5;
+    private JLabel l6;
+    private JLabel l7;
+    private JLabel l8;
+    private JLabel l9;
+    private JTextField t1;
+    private JTextArea a1;
+    
+    private String nombreC = " ";
+    private String fechaC = " ";
+    private String horaC = " ";
+    private String nombreM = " ";
+    private String especie = " ";
+    private String raza = " ";
+    private String genero = " ";
+    private String color = " ";
+    private String anioN = " ";
 
     private void ventanaDiagnostico() {
         Container cp = getContentPane();
-        cp.setLayout(new GridBagLayout());
+        cp.setLayout(new BorderLayout());
 		
-        //Panel 1
+        //Panel Ficha Médica
         JPanel p1 = new JPanel();
         p1.setLayout(new BorderLayout());
         Border loweredlevel = BorderFactory.createLoweredBevelBorder();
@@ -63,34 +120,141 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         titulo1.setTitlePosition(TitledBorder.ABOVE_TOP);
         p1.setBorder(titulo1);
         
-        GridBagConstraints pa1 = new GridBagConstraints();
-        
         JPanel p2 = new JPanel();
         p2.setLayout(new GridBagLayout());
         GridBagConstraints g1 = new GridBagConstraints();
         
-        JLabel l1 = new JLabel("Cédula:");
+        JLabel l1 = new JLabel("Número de Cita:");
         g1.gridx=0;
         g1.gridy=0;
         p2.add(l1, g1);
         
-        JTextField t1 = new JTextField(12);
+        t1 = new JTextField(5);
         g1.gridx=1;
         g1.gridy=0;
         p2.add(t1, g1);
-        
-        b2 = new JButton("Buscar");
-        b2.addActionListener(this);
-        b2.setActionCommand("buscar");
-        g1.gridx=3;
+       
+        b1 = new JButton("Buscar");
+        b1.addActionListener(this);
+        b1.setActionCommand("buscar");
+        g1.gridx=2;
         g1.gridy=0;
-        p2.add(b2, g1);
+        p2.add(b1, g1);
         
     
         JPanel p3 = new JPanel();
         p3.setLayout(new GridBagLayout());
+        GridBagConstraints g2 = new GridBagConstraints();
         
-        dt = new DefaultTableModel(new String[]{"Nombre","Check"}, 0) {
+        l2 = new JLabel(fechaC);
+        g2.gridx=0;
+        g2.gridy=0;
+        p3.add(l2, g2);
+        
+        l3 = new JLabel(horaC);
+        g2.gridx=1;
+        g2.gridy=0;
+        p3.add(l3, g2);
+        
+        JLabel l10 = new JLabel(" ");
+        g2.gridx=0;
+        g2.gridy=1;
+        g2.gridwidth = 2;
+        p3.add(l10, g2);
+
+        l4 = new JLabel(nombreC);
+        g2.gridx=0;
+        g2.gridy=2;
+        g2.gridwidth = 2;
+        p3.add(l4, g2);
+        
+        JLabel l11 = new JLabel(" ");
+        g2.gridx=0;
+        g2.gridy=3;
+        g2.gridwidth = 2;
+        p3.add(l11, g2);
+        
+        l5 = new JLabel(nombreM);
+        g2.gridx=0;
+        g2.gridy=4;
+        g2.gridwidth = 2;
+        p3.add(l5, g2);
+        
+        l6 = new JLabel(especie);
+        g2.gridx=0;
+        g2.gridy=5;
+        g2.gridwidth = 2;
+        p3.add(l6, g2);
+
+        l6 = new JLabel(raza);
+        g2.gridx=0;
+        g2.gridy=6;
+        g2.gridwidth = 2;
+        p3.add(l6, g2);
+        
+        l7 = new JLabel(genero);
+        g2.gridx=0;
+        g2.gridy=7;
+        g2.gridwidth = 2;
+        p3.add(l7, g2);
+        
+        l8 = new JLabel(color);
+        g2.gridx=0;
+        g2.gridy=8;
+        g2.gridwidth = 2;
+        p3.add(l8, g2);
+
+        l9 = new JLabel(anioN);
+        g2.gridx=0;
+        g2.gridy=9;
+        g2.gridwidth = 2;
+        p3.add(l9, g2);
+        
+        p1.add(p2, BorderLayout.NORTH);
+        p1.add(p3, BorderLayout.CENTER);
+        
+        //Panel que contiene a Diagnóstico y Receta
+        JPanel p4 = new JPanel();
+        p4.setLayout(new BorderLayout());
+        
+        // Panel Diagnóstico
+        JPanel p5 = new JPanel();
+        p5.setLayout(new GridBagLayout());
+        GridBagConstraints g3 = new GridBagConstraints();
+        TitledBorder titulo2;
+        titulo2 = BorderFactory.createTitledBorder("Diagnóstico");
+        titulo2.setTitlePosition(TitledBorder.ABOVE_TOP);
+        p5.setBorder(titulo2);
+
+        g3.insets = new Insets(1,1,1,1);        
+        g3.weightx = 0.1; 
+        
+        a1= new JTextArea();
+        scr1 = new JScrollPane(a1);
+        a1.setLineWrap(true);
+        a1.setWrapStyleWord(true);
+        g3.gridx = 0;
+        g3.gridy = 0;
+        g3.ipadx = 610;
+        g3.ipady = 200;
+        p5.add(scr1,g3);
+
+        // Panel Receta
+        JPanel p6 = new JPanel();
+        p6.setLayout(new BorderLayout());
+        
+        JPanel p8 = new JPanel();
+        p8.setLayout(new GridBagLayout());
+        GridBagConstraints g4 = new GridBagConstraints();
+        
+        
+        
+        TitledBorder titulo3;
+        titulo3 = BorderFactory.createTitledBorder("Receta");
+        titulo3.setTitlePosition(TitledBorder.ABOVE_TOP);
+        p6.setBorder(titulo3);
+        
+        dt = new DefaultTableModel(new String[]{"Nombre","Cantidad","Dosificación"}, 0) {
  
             Class[] types = new Class[]{
                 java.lang.Object.class, java.lang.Boolean.class    
@@ -108,112 +272,98 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         };
         
         tb1 = new JTable();
-        
-        //Método para listar los datos
-        //mostrar();
-        
         tb1.setModel(dt);
-        scr = new JScrollPane(tb1);
-        g1.gridx = 0;
-        g1.gridy = 0;
-        g1.ipadx = 300;
-        g1.ipady = 300;
-        p3.add(scr, g1);
+        scr2 = new JScrollPane(tb1);
+        p6.add(scr2, BorderLayout.CENTER);
+
+        p4.add(p5, BorderLayout.NORTH);
+        p4.add(p6, BorderLayout.CENTER);
         
-        p1.add(p2, BorderLayout.NORTH);
-        p1.add(p3, BorderLayout.CENTER);
+        //Panel de botones
+        JPanel p7 = new JPanel();
+        p7.setLayout(new FlowLayout());
+
+        b2 = new JButton("Volver");
+        b2.addActionListener(this);
+        b2.setActionCommand("volver");
+        p7.add(b2);
         
-        // Panel 2
-        JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridBagLayout());
-        TitledBorder titulo2;
-        titulo2 = BorderFactory.createTitledBorder("Diagnostico");
-        titulo2.setTitlePosition(TitledBorder.ABOVE_TOP);
-        panel2.setBorder(titulo2);
-
-        GridBagConstraints gbDiagnostico = new GridBagConstraints();
-
-        a1= new JTextArea();
-        gbDiagnostico.gridx=0;
-        gbDiagnostico.gridy=0;
-        gbDiagnostico.ipadx=300;
-        gbDiagnostico.ipady=300;
-        panel2.add(a1, gbDiagnostico);
-
-        // Panel 3
-        JPanel panel3 = new JPanel();
-        panel3.setLayout(new java.awt.GridBagLayout());
-        TitledBorder titulo3;
-        titulo3 = BorderFactory.createTitledBorder("Receta");
-        titulo3.setTitlePosition(TitledBorder.ABOVE_TOP);
-        panel3.setBorder(titulo3);
-
-        GridBagConstraints gbReceta = new GridBagConstraints();
-
-        tabla = new JTable(10,3);
-        gbReceta.gridx=0;
-        gbReceta.gridy=0;
-        gbReceta.ipadx=300;
-        gbReceta.ipady=300;
-
-        panel3.add(tabla,gbReceta);
-
-        tabla.setValueAt("FECHA", 0, 0);
-        tabla.setValueAt("MASCOTA", 0, 1);
-        tabla.setValueAt("ID-DIAGNOSTICO", 0, 2); 
-
-         // Panel 4
-        JPanel panel4 = new JPanel();
-        panel4.setLayout(new FlowLayout());
-
-        b1 = new JButton("Volver");
-        b1.addActionListener(this);
-        b1.setActionCommand("volver");
-        panel4.add(b1);
+        b3 = new JButton("Aceptar");
+        b3.addActionListener(this);
+        b3.setActionCommand("aceptar");
+        p7.add(b3);  
         
-        ok = new JButton("Aceptar");
-        ok.addActionListener(this);
-        ok.setActionCommand("aceptar");
-        panel4.add(ok);  
-        
-        
-        pa1.gridx=0;
-        pa1.gridy=0;
-        pa1.fill = GridBagConstraints.BOTH;
-        cp.add(p1, pa1);
-        
-        pa1.gridx=1;
-        pa1.gridy=0;
-        pa1.fill = GridBagConstraints.BOTH;
-        cp.add(panel2, pa1);
-        
-        pa1.gridx=3;
-        pa1.gridy=0;
-        pa1.fill = GridBagConstraints.BOTH;
-        cp.add(panel3, pa1);
-        
-        pa1.gridx=0;
-        pa1.gridy=1;
-        pa1.gridwidth = 3;
-        pa1.fill = GridBagConstraints.HORIZONTAL;
-        cp.add(panel4, pa1);
+        cp.add(p1, BorderLayout.WEST);
+        cp.add(p4, BorderLayout.CENTER);
+        cp.add(p7, BorderLayout.SOUTH);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String comando = e.getActionCommand();
         switch (comando) {
-
-        case "volver":
-            this.setVisible(false);
-            break;
-
-        case "aceptar":
-            JOptionPane.showMessageDialog(null, "Operación Exitosa");
-            break;
+            case "buscar":
+                buscarCita();
+                break;
             
-        default:
-            break;
+            case "volver":
+                this.setVisible(false);
+                break;
+
+            case "aceptar":
+                agregarDiagnostico();
+                break;
+
+            default:
+                break;
         }
     }
+    
+    int numeroC;
+    int mascotaI;
+    int clienteI;
+    Cliente cli;
+    Mascota mas;
+    Cita cit;
+    
+    public void buscarCita(){
+        
+        try {
+            numeroC = Integer.parseInt(t1.getText());
+            cit = cct.citBuscar(con, numeroC);
+            
+            mascotaI = cct.buscarMascotaId(con, numeroC);
+            mas = cm.masBuscar(con, mascotaI);
+            
+            clienteI = cm.buscarClienteId(con, mascotaI);
+            cli = cc.cliBuscarId(con, clienteI);
+            
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            fechaC = formato.format(cit.getCitaFecha());
+            formato = new SimpleDateFormat("HH:mm.ss");
+            horaC = formato.format(cit.getCitaFecha());
+            
+            nombreC = cli.getPersonaNombre() +" "+ cli.getPersonaApellido();
+            
+            nombreM = mas.getMascotaNombre();
+            especie = mas.getEspecie().getEspecieNombre();
+            raza = mas.getRaza().getRazaNombre();
+            genero = mas.getMascotaGenero();
+            color = mas.getMascotaColor();
+            anioN = mas.getAnio().toString();
+                    
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }   
+    }
+    
+    Diagnostico diag; 
+    
+    public void agregarDiagnostico(){
+     
+        
+        
+    }
+    
+    
 }

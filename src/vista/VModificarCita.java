@@ -11,18 +11,18 @@ import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import modelo.Cita;
 import modelo.Cliente;
 import modelo.Mascota;
 
@@ -50,14 +50,14 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
     }
     
     public void initComponentes(){
-        setSize(800,400);
+        setSize(800,500);
         setTitle("Modificar Cita");
     }
     
     DefaultTableModel dt;
     private JTable tb1;
     private JScrollPane scr;
-    private boolean[] editable = {false,false,false,true};
+    private boolean[] editable = {false,false,false,false,false,true};
     
     private JButton b1;
     private JButton b2;
@@ -75,7 +75,7 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         JLabel l1 = new JLabel("Cédula:");
         p1.add(l1);
   
-        t1 = new JTextField();
+        t1 = new JTextField(10);
         p1.add(t1);
         
         b1 = new JButton("Buscar");
@@ -83,16 +83,14 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         b1.setActionCommand("buscar");
         p1.add(b1);
         
-        p1.add(l1);
-        
         JPanel p2 = new JPanel();
         p2.setLayout(new BorderLayout());
         
-        dt = new DefaultTableModel(new String[]{"Fecha","Cliente","Mascota","Check"}, 0) {
+        dt = new DefaultTableModel(new String[]{"Cita","Fecha","Hora","Cliente","Mascota","Check"}, 0) {
  
             Class[] types = new Class[]{
                 java.lang.Object.class,java.lang.Object.class,java.lang.Object.class,
-                java.lang.Boolean.class    
+                java.lang.Object.class,java.lang.Boolean.class    
             };
  
             @Override
@@ -129,6 +127,7 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         b4.setActionCommand("eliminar");
         p3.add(b4);
         
+        cp.add(p1, BorderLayout.NORTH);
         cp.add(p2, BorderLayout.CENTER);
         cp.add(p3, BorderLayout.SOUTH);
     }
@@ -149,20 +148,20 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
                 
             case "editar":
                 editarCita();
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;
                 
             case "eliminar":
                 eliminarCita();
-                JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;    
  
         }
     }
     
-    String cedula;
     Cliente cli;
     Mascota mas;
+    Cita cit;
+    
+    String cedula;
     String fechaMC;
     String horaMC;
     String nombreC;
@@ -172,47 +171,60 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         cedula = t1.getText();
         
         cli = cc.cliBuscar(con, cedula);
-        mas = (Mascota) cli.getMascotas();
-
-        int n = cli.getMascotas().size();
+        ArrayList<Mascota> listaM = (ArrayList<Mascota>) cli.getMascotas();
+        ArrayList<Cita> listaC;
+                
+        int n = listaM.size();
         
         for(int i = 0; i < n; i++){
+            mas = listaM.get(i);
             
-            if(mas.getCitas() != null){
-                Object fila[] = new Object[4];
+            listaC = (ArrayList<Cita>) mas.getCitas();
+            
+            int m = listaC.size();
+            
+            for(int j = 0; j < m; j++){
+                cit = listaC.get(i);
                 
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                fechaMC = formato.format(mas.getCitas().get(i).getCitaFecha());
-                System.out.println(fechaMC);
-                
-                formato = new SimpleDateFormat("HH.mm.ss");
-                horaMC = formato.format(mas.getCitas().get(i).getCitaFecha());
-                System.out.println(horaMC);
-                
-                fila[0] = fechaMC;
-                
-                nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
-                fila[1] = nombreC;
-                
-                nombreM = mas.getMascotaNombre();
-                fila[2] = nombreM;
-                
-                fila[3] = false;
+                if(listaC.get(j) != null){
+                    Object fila[] = new Object[6];
 
-                dt.addRow(fila);
-            }   
+                    SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                    fechaMC = formato.format(cit.getCitaFecha());
+
+                    formato = new SimpleDateFormat("HH.mm.ss");
+                    horaMC = formato.format(cit.getCitaFecha());
+
+                    fila[0] = cit.getCitaId();
+                    fila[1] = fechaMC;
+                    fila[2] = horaMC;
+                    nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
+                    fila[3] = nombreC;
+                    nombreM = mas.getMascotaNombre();
+                    fila[4] = nombreM;
+                    fila[5] = false;
+
+                    dt.addRow(fila);
+                }   
+            }
         } 
     }
     
     
     public void editarCita(){ 
+        
         for(int i = 0; i < tb1.getRowCount(); i++){
-            System.out.println("Check: " + tb1.getValueAt(i, 3));
-            if((boolean)tb1.getValueAt(i, 3) == true){
+            if((boolean)tb1.getValueAt(i, 5) == true){
+                
+                cit = cct.citBuscar(con, (int) tb1.getValueAt(i, 0));
+                        
+                
                 llamarVentanaCita(getDesktopPane());
+                
             }
         }
     }
+    
     
     public void llamarVentanaCita(JDesktopPane escritorio){
         VRealizarCita vrc = new VRealizarCita(con, cca, cc, cm, cct);
@@ -224,15 +236,13 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
     
     
     public void eliminarCita(){
-        
         for(int i = 0; i < tb1.getRowCount(); i++){
-            System.out.println("Check: " + tb1.getValueAt(i, 3));
-            if((boolean)tb1.getValueAt(i, 3) == true){
-                
+            
+            if((boolean)tb1.getValueAt(i, 5) == true){
+                cit = cct.citBuscar(con, (int) tb1.getValueAt(i, 0));
+                mas.eliminarCitas(cit);
             }
         }
     }
-    
-
     
 }

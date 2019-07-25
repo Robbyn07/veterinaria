@@ -1,6 +1,7 @@
 
 package vista;
 
+import com.toedter.calendar.JYearChooser;
 import conexionbd.Conexion;
 import conexionbd.ControladorCaracter;
 import conexionbd.ControladorCliente;
@@ -15,7 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -65,16 +65,16 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         setMaximizable(true);
     }
     
-    DefaultTableModel dt;
-    private JTable tb1;
-    private JScrollPane scr;
-    private boolean[] editable = {false,true, true, true, true, true};
-    
     private JButton b1;
     private JButton b2;
     private JButton b3;
     private JButton b4;
     private JComboBox<String> cb1;
+    DefaultTableModel dt;
+    private JTable tb1;
+    private JScrollPane scr;
+    private boolean[] editable = {true,true, true, true, true, true};
+    private JYearChooser yc;
     private JTextField t1;
     private JLabel l2;
     private JLabel l3;
@@ -127,7 +127,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         p1.add(l4, g1);
         
         JPanel p2 = new JPanel();
-        p2.setLayout(new BorderLayout());
+        p2.setLayout(new GridBagLayout());
         
         
         dt = new DefaultTableModel(new String[]{"Nombre","Especie","Raza","Género",
@@ -150,13 +150,19 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         };
         
         tb1 = new JTable();
+        
         tb1.setModel(dt);
-        TableColumn col = tb1.getColumnModel().getColumn(3);
+        TableColumn col=tb1.getColumnModel().getColumn(3);
         String op[]={"Macho","Hembra"};
         cb1 = new JComboBox(op);
         col.setCellEditor(new DefaultCellEditor(cb1));
         scr = new JScrollPane(tb1);
-        p2.add(scr, BorderLayout.CENTER);
+        g1.gridx = 0;
+        g1.gridy = 0;
+        g1.ipadx = 600;
+        g1.ipady = 100;
+        g1.gridwidth =3;
+        p2.add(scr, g1);
         
         JPanel p3 = new JPanel(); 
         p3.setLayout(new FlowLayout());
@@ -164,12 +170,12 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         b2 = new JButton("Volver");
         b2.addActionListener(this);
         b2.setActionCommand("volver");
-        p3.add(b2);
+        p3.add(b2, g1);
         
         b3 = new JButton("Editar");
         b3.addActionListener(this);
         b3.setActionCommand("editar");
-        p3.add(b3); 
+        p3.add(b3, g1); 
         
         cp.add(p1, BorderLayout.NORTH);
         cp.add(p2, BorderLayout.CENTER);
@@ -192,6 +198,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                 
             case "editar":
                 editarMascota();
+                JOptionPane.showMessageDialog(null, "Operación Exitosa");
                 break;   
  
         }
@@ -205,35 +212,39 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         
         try {
             if(cca.verificarCedula(cedula) == true){
-                
-                nombreC = cli.getPersonaNombre();
-                telefonoC = cli.getPersonaTelefono();
-                direccionC = cli.getPersonaDireccion();
-
-                mostrar();          
-
+                if(cli.getPersonaCedula().equals(cedula)){
+                    nombreC = cc.cliBuscar(con, cedula).getPersonaNombre();
+                    l2.setText(nombreC);
+                    
+                    telefonoC = cli.getPersonaTelefono();
+                    l3.setText(telefonoC);
+                    
+                    direccionC = cli.getPersonaDireccion();
+                    l4.setText(direccionC); 
+                    
+                    mostrar();
+                }else{
+                    JOptionPane.showMessageDialog(null,"Error","El cliente no"
+                            + " existe",JOptionPane.ERROR_MESSAGE);
+                }
             }
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
+            JOptionPane.showMessageDialog(null,"Error","Verifique la cédula",
                     JOptionPane.ERROR_MESSAGE);        
         }
     }
     
-    ArrayList<Mascota> lista;
-    
     public void mostrar(){
         
-        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());
-        
-        int n = lista.size();
+        int n = cm.masObtener(con, cli.getClienteId()).size();
         
         for(int i = 0; i < n; i++){
             Object fila[] = new Object[6];
-            fila[0] = lista.get(i).getMascotaNombre();
-            fila[1] = lista.get(i).getEspecie();
-            fila[2] = lista.get(i).getRaza();
-            fila[3] = lista.get(i).getMascotaGenero();
-            fila[4] = lista.get(i).getMascotaColor();
+            fila[0] = cm.masObtener(con, cli.getClienteId()).get(i).getMascotaNombre();
+            fila[1] = cm.masObtener(con, cli.getClienteId()).get(i).getEspecie();
+            fila[2] = cm.masObtener(con, cli.getClienteId()).get(i).getRaza();
+            fila[3] = cm.masObtener(con, cli.getClienteId()).get(i).getMascotaGenero();
+            fila[4] = cm.masObtener(con, cli.getClienteId()).get(i).getMascotaColor();
             fila[5] = false;
 
             dt.addRow(fila);
@@ -248,23 +259,28 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     String color;
     
     public void editarMascota(){
-        int n = lista.size();
+        Cliente cli;
+        cli = cc.cliBuscar(con, cedula);
+        
+        int n = cm.masObtener(con, cli.getClienteId()).size();
         
         for(int i = 0; i < tb1.getRowCount(); i++){
-            
+            System.out.println("Check: " + tb1.getValueAt(i, 5));
             if((boolean)tb1.getValueAt(i, 5) == true){
-                Mascota mas;
-                
                 for(int j = 0; j < n; j++){
+                    Mascota mas;
                     mas = cm.masBuscar(con, cli.getMascotas().get(j).getMascotaId());
-                    
+                    nombre = String.valueOf(dt.getValueAt(i,0));
                     especie = String.valueOf(dt.getValueAt(i,1));
                     raza = String.valueOf(dt.getValueAt(i,2));
                     genero = String.valueOf(tb1.getModel().getValueAt(i, 3));
                     color = String.valueOf(dt.getValueAt(i, 4));
                     
+                    mas.setMascotaNombre(nombre);
                     Especie esp = ces.espBuscar(con, especie);
-                    Raza raz = cr.razBuscar(con, raza);
+                    Raza raz = cr.razBuscar(con, nombre);
+
+                    mas.setMascotaNombre(nombre);
 
                     if(esp == null){
                         esp = new Especie();
@@ -277,7 +293,6 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                         raz.setRazaNombre(raza);
                         cr.razAgregar(con, raz);
                     }
-                    
                     mas.setEspecie(esp);
                     mas.setRaza(raz);
                     mas.setMascotaGenero(genero);
@@ -290,9 +305,8 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                         if(cm.masEditar(con, mas) == true){
                             JOptionPane.showMessageDialog(null, "Operación Exitosa");
                         }else{
-                            JOptionPane.showMessageDialog(null,"No se completó la"
-                                    + " operación","Error",JOptionPane.ERROR_MESSAGE); 
-                            break;
+                            JOptionPane.showMessageDialog(null,"Error","No se pudo completar "
+                                    + "la operación",JOptionPane.ERROR_MESSAGE); 
                         }
                     }else{
 
@@ -301,6 +315,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
             }
         }  
         
-    } 
+    }
+    
     
 }

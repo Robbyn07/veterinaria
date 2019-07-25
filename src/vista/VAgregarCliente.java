@@ -144,10 +144,15 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
                 
             case "agregar":
                 if(comprobarCampos() == true){
-                    agregarCliente();
+                    if(agregarCliente() == true){
+                        JOptionPane.showMessageDialog(null, "Operación Exitosa");
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Error","No se ha podido "
+                            + "completar la operación",JOptionPane.ERROR_MESSAGE);
+                    }
                 }else{
-                    JOptionPane.showMessageDialog(null,"Ingrese correctamente "
-                            + "los campos","Error",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Error","Ingrese correctamente "
+                            + "los campos",JOptionPane.ERROR_MESSAGE);
                 }
                 
                 break;
@@ -168,10 +173,8 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
         cedula= t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
-        System.out.println("Cedula=" + cedula);
-        boolean ss = cca.verificarCedula(cedula);
-        if( ss== true){
-            System.out.println("Es verdadero");
+        
+        if(cca.verificarCedula(cedula) == true){
             try {
                 if(cca.comprobarCaracteres(nombre) == true
                         && cca.comprobarCaracteres(apellido) == true){
@@ -180,14 +183,13 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
             } catch (Throwable ex) {
                 Logger.getLogger(VAgregarEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            System.out.println("Es Falso");
         }
         
         return v;
     }
     
-    private void agregarCliente(){
+    private boolean agregarCliente(){
+        v = false;
         cedula= t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
@@ -204,12 +206,10 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
         cli.setPersonaDireccion(direccion);
         
         if(cc.cliAgregar(con, cli) == true){
-            JOptionPane.showMessageDialog(null, "Operación Exitosa");
-        }else{
-            JOptionPane.showMessageDialog(null,"No se completó la operación"
-                    ,"Error",JOptionPane.ERROR_MESSAGE);
+            v = true;
         }
         
+        return v;
     }
     
 }

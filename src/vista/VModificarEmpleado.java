@@ -116,7 +116,8 @@ public class VModificarEmpleado extends JInternalFrame implements ActionListener
         cp.add(l5, g1);
         
         cb1 = new JComboBox<>();
-            cb1.addItem("Secretario");
+            cb1.addItem("Administrador");
+            cb1.addItem("Secretaria/o");
             cb1.addItem("Médico");
         g1.gridx =1;
         g1.gridy =4;

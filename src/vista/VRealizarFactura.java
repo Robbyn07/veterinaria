@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
@@ -120,7 +119,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g1.gridy =0;
         p1.add(l1, g1);
         
-        l2 = new JLabel("13");
+        l2 = new JLabel(generarNF());
         g1.gridx =1;
         g1.gridy =0;
         p1.add(l2, g1);
@@ -140,7 +139,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g1.gridy =1;
         p1.add(l5, g1);
         
-        t1 = new JTextField(10);
+        t1 = new JTextField(12);
         g1.gridx =1;
         g1.gridy =1;
         p1.add(t1, g1);
@@ -157,7 +156,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g1.gridy =2;
         p1.add(l6, g1);
         
-        l7 = new JLabel(nombre + " " + apellido);
+        l7 = new JLabel(nombre);
         g1.gridx =1;
         g1.gridy =2;
         p1.add(l7, g1);
@@ -193,13 +192,14 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         JPanel p3 = new JPanel(); 
         p3.setLayout(new GridBagLayout());
         GridBagConstraints g2 = new GridBagConstraints();
+        auto();
         
         JLabel l12 = new JLabel("Producto:");
         g2.gridx = 0;
         g2.gridy = 0;
         p3.add(l12, g2) ;
         
-        t2 = new JTextField(10);
+        t2 = new JTextField(12);
         ac = new TextAutoCompleter(t2);
         g2.gridx = 1;
         g2.gridy = 0;
@@ -210,7 +210,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g2.gridy = 1;
         p3.add(l13, g2) ;
         
-        t3 = new JTextField(5);
+        t3 = new JTextField(12);
         g2.gridx = 1;
         g2.gridy = 1;
         p3.add(t3, g2);
@@ -251,34 +251,50 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         
         JPanel p5 = new JPanel(); 
         GridBagConstraints g3 = new GridBagConstraints(); 
-        p5.setLayout(new FlowLayout());
+        p5.setLayout(new GridBagLayout());
         
         JLabel l14 = new JLabel("Subtotal:");
-        p5.add(l14);
+        g2.gridx =0;
+        g2.gridy =0;
+        p5.add(l14, g3);
         
-        t4 = new JTextField(6);
+        t4 = new JTextField(12);
         t4.setEditable(false);
-        p5.add(t4);
+        g2.gridx =1;
+        g2.gridy =0;
+        p5.add(t4, g3);
         
         JLabel l15 = new JLabel("IVA(12%):");
-        p5.add(l15);
+        g2.gridx =0;
+        g2.gridy =1;
+        p5.add(l15, g3);
         
-        t5 = new JTextField(6);
+        t5 = new JTextField(12);
         t5.setEditable(false);
-        p5.add(t5);
+        g2.gridx =1;
+        g2.gridy =1;
+        p5.add(t5, g3);
         
         JLabel l16 = new JLabel("Descuento:");
-        p5.add(l16);
+        g2.gridx =0;
+        g2.gridy =2;
+        p5.add(l16, g3);
         
-        t6 = new JTextField(6);
-        p5.add(t6);
+        t6 = new JTextField(12);
+        g2.gridx =1;
+        g2.gridy =2;
+        p5.add(t6, g3);
         
         JLabel l17 = new JLabel("Total:");
-        p5.add(l17);
+        g2.gridx =0;
+        g2.gridy =3;
+        p5.add(l17, g3);
         
-        t7 = new JTextField(6);
+        t7 = new JTextField(12);
         t7.setEditable(false);
-        p5.add(t7);
+        g2.gridx =1;
+        g2.gridy =3;
+        p5.add(t7, g3);
 
         p2.add(p3, BorderLayout.NORTH);
         p2.add(p4, BorderLayout.CENTER);
@@ -329,14 +345,11 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     
     String ids;
     int id;
-
+    
     public String generarNF(){
-        
-        ArrayList<FacturaCabecera> lista = (ArrayList<FacturaCabecera>) cfc.cabObtener(con);
-        
-        int n = lista.size();
+        int n = cfc.cabObtener(con).size();
         for(int i = 0; i < n; i++){
-            id = lista.get(i).getFacturaCabeceraNumero();
+            id = cfc.cabObtener(con).get(id).getFacturaCabeceraNumero();
         }
         
         ids = Integer.toString(id);
@@ -352,22 +365,21 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     
     public void buscarCliente(){
         cedula = t1.getText();
-        cli = cc.cliBuscar(con, cedula);
         
         try {
             if(cca.verificarCedula(cedula) == true){
-                if(cli.getPersonaCedula().equals(cedula)){
+                if(cc.cliBuscar(con, cedula).getPersonaCedula().equals(cedula)){
+                    cli = cc.cliBuscar(con,cedula);
                             
                     nombre = cli.getPersonaNombre();
                     apellido = cli.getPersonaApellido();
+                    l7.setText(nombre + " " + apellido);
 
                     telefono = cli.getPersonaTelefono();
+                    l9.setText(telefono);
 
                     direccion = cli.getPersonaDireccion();
-                    
-                    auto();
-                    this.updateUI();
-                    
+                    l11.setText(direccion);  
                 }else{
                     JOptionPane.showMessageDialog(null,"El cliente no existe ",
                             "Error",JOptionPane.ERROR_MESSAGE);
@@ -375,20 +387,15 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             }
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
-                    JOptionPane.ERROR_MESSAGE);    
-            
-            e.printStackTrace();
+                    JOptionPane.ERROR_MESSAGE);        
         }
     }
     
     public void auto(){
-        
-        ArrayList<Producto> lista = (ArrayList<Producto>) cpd.proObtener(con);
-        
-        int n = lista.size();
+        int n = cpd.proObtener(con).size();
         
         for(int i = 0; i < n; i++){
-            ac.addItem(lista.get(i).getProductoNombre());
+            ac.addItem(cpd.proObtener(con).get(i).getProductoNombre());
         } 
     }
     
@@ -402,12 +409,10 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     
     public void agregarProducto(){
         fd = new FacturaDetalle();
+        pro = cpd.proBuscar(con, producto);
         producto = t2.getText();
         cantidad = Integer.parseInt(t3.getText());
         
-        pro = cpd.proBuscar(con, producto);
-        
-
         if(pro != null){
             if(cantidad == 0){
                 JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida",
@@ -463,12 +468,13 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 iva = subtotalC * 0.12;
                 t5.setText(Double.toString(iva));
                 
-                
-                descuento = Double.parseDouble(t6.getText()); 
-                      
-                
-                totalC = subtotalC + iva - descuento;
-                t7.setText(Double.toString(totalC));
+                t6.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        descuento = Double.parseDouble(t6.getText()); 
+                        totalC = subtotalC + iva - descuento;
+                        t7.setText(Double.toString(totalC));
+                    }
+                });
 
             } catch (NumberFormatException e) {
                 e.printStackTrace();
@@ -503,18 +509,17 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             Object[] options = {"Efectivo",
                                 "Tarjeta"};
             int n = JOptionPane.showOptionDialog(null,"Eliga el método de pago",
-                    "Método de Pago",JOptionPane.YES_NO_OPTION,
+                    "A Silly Question",JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,null,
                     options,
                     options[0]);
 
             if(n == 0){
                 fc.setFacturaCabeceraTipoPago("EFECTIVO");
-                cfc.cabEditarMetodoPago(con, fc);
-                
+                //método para actualizar pago
             }else{
                 fc.setFacturaCabeceraTipoPago("TARJETA");
-                cfc.cabEditarMetodoPago(con, fc);
+                //método para actualizar pago
                 llamarVentanaPagoTarjeta(getDesktopPane());
             } 
             

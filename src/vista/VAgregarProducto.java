@@ -84,7 +84,7 @@ public class VAgregarProducto extends JInternalFrame implements ActionListener{
         
         cb2 = new JComboBox<>();
             cb2.addItem("Nacional");
-            cb2.addItem("Extranjero");
+            cb2.addItem("Extrangero");
         cb2.setEnabled(false);
         g1.gridx =1;
         g1.gridy =2;
@@ -163,41 +163,19 @@ public class VAgregarProducto extends JInternalFrame implements ActionListener{
     public boolean agregarProducto(){
         v = false;
         categoria = cb1.getSelectedItem().toString();
-        origen = cb2.getSelectedItem().toString();
-        if(origen.equals("Nacional")){
-            origen="N";
-        }else{
-            origen="E";
-        }
-        alianza = cb3.getSelectedItem().toString();
-        if(alianza.equals("Propio")){
-            alianza="P";
-        }else{
-            alianza="A";
-        }
         nombre = t1.getText();
         
         Producto pro = new Producto(); 
-        if(categoria.equals("Servicio")||categoria.equals("SERVICIO")){
-            pro.setProductoCategoria(categoria);    //CATEGORIA QUE MANDA
-            pro.setProductoNombre(nombre);          //NOMBRE DE SERVICIO
-            pro.setProductoStock(99999);            //STOCK DE SERVICIO
-            pro.setProductoPrecioCompra(0);         //PRECIO DE COMPRA DE SERVICO
-            pro.setProductoPrecioVenta(1);          //PRECIO DE VENTA
-            pro.setProductoOrigen(null);            //SERVICIO NO TIENE ORIGEN
-            pro.setProductoAlianza(alianza);        //ALANZA
-            pro.setProductoEstado("I");             //ESTADO INHABILITADO
-            pro.setProveedor(null);                 //PROVEEDOR NULL
+        if(categoria.equals("Servicio")){
+            pro.setProductoCategoria(categoria);
+            pro.setProductoNombre(nombre);
+            pro.setProductoOrigen(null);
+            pro.setProductoAlianza(alianza);
         }else{
-            pro.setProductoCategoria(categoria);    //CATEGORIA DE PRODUCTO
-            pro.setProductoNombre(nombre);          //NOMBRE DE PRODUCTO
-            pro.setProductoOrigen(origen);          //ORIGEN DE PRODUCTO
-            pro.setProductoAlianza(null);           //ALINZA ES NULL
-            pro.setProductoStock(1);                //STOCK 0
-            pro.setProductoPrecioCompra(0);         //PRECIOC 0
-            pro.setProductoPrecioVenta(1);          //PRECIOV 0
-            pro.setProductoEstado("I");             //ESTADO INACTIVO
-            pro.setProveedor(null);                 //PROVEEDOR NULL
+            pro.setProductoCategoria(categoria);
+            pro.setProductoNombre(nombre);
+            pro.setProductoOrigen(origen);
+            pro.setProductoAlianza(null);
         }
         
         if(cpd.proAgregar(con, pro) == true){

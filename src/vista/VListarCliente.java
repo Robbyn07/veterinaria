@@ -1,3 +1,4 @@
+
 package vista;
 
 import conexionbd.Conexion;

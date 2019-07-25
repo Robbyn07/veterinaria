@@ -72,7 +72,7 @@ public class VSecretaria extends JFrame implements ActionListener{
     }
     
     public void initComponentes(){
-        setSize(1100,800);
+        setSize(1600,800);
         setTitle("Ventana Secretaría");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -168,6 +168,10 @@ public class VSecretaria extends JFrame implements ActionListener{
         System.out.println("Comando :" + comando);
         
         switch(comando){
+            case "listarCl":
+                llamarVentanaListarCl();
+                break;
+            
             case "agregarCl":
                 llamarVentanaAgregarCl();
                 break;
@@ -287,7 +291,7 @@ public class VSecretaria extends JFrame implements ActionListener{
                 cfc,cfd,cd,crc,crd);
         vI.setVisible(true);
         
-        setVisible(false);
+        this.setVisible(false);
     }
 
 }

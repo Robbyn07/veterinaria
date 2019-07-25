@@ -5,12 +5,9 @@
  */
 package vista;
 
-import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
@@ -39,7 +36,6 @@ public class VHistorial extends JInternalFrame implements ActionListener{
     public void initComponentes(){
         setSize(700,700);
         setClosable(true);
-	setMaximizable(true);
         setTitle("Ventana Buscar Historial");
     }
     
@@ -54,7 +50,6 @@ public class VHistorial extends JInternalFrame implements ActionListener{
     public void ventanaHistorial(){
         Container cp = getContentPane();
 	cp.setLayout(new java.awt.GridBagLayout());
-        Font fuente = new Font("Times New Roman", 3, 10);
         
 	//Panel 1
 	JPanel panel1 = new JPanel();
@@ -186,39 +181,6 @@ public class VHistorial extends JInternalFrame implements ActionListener{
         }
     }
     
-    /*
-    Método para mostrar la información
-    */
-    /*
-    public void mostrar(){
-        int n = g.listarProductosExistentes().size();
-        for(int i = 0; i < n; i++){
-            Object fila[] = new Object[2];
-            fila[0] = g.listarProductosExistentes().get(i).getCodigo();
-            fila[1] = false;
-
-            dt.addRow(fila);
-        }
-    }
-    */
-    
-    /*
-    Método para obtener el dato de una fila
-    */
-    /*
-    public void setPreferencias(){
-        pref = new ArrayList<>();
-        for(int i = 0; i < tb1.getRowCount(); i++){
-            System.out.println("Check: " + tb1.getValueAt(i, 3));
-            if((boolean)tb1.getValueAt(i, 3)==true){
-                pref.add(g.listarProductosExistentes().get(i));
-            }
-        }  
-        
-        g.setPreferencias((ArrayList<Producto>) pref, persona);
-        JOptionPane.showMessageDialog(null, mensajes.getString("jPreferencias"));
-    }
-    */
 
     private void llamarVentanaBusquedaHistorial(JDesktopPane escritorioM) {
         VBusquedaHistorial vBH = new  VBusquedaHistorial();

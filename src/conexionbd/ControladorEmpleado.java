@@ -371,6 +371,7 @@ public class ControladorEmpleado {
      public boolean creacionEmpleado(Conexion con, Empleado empleado){
         
         try {
+            System.out.println("manda a crear usuario empleado");
             sentencia = con.getConexion().prepareStatement("CREATE USER ? "
                     + "IDENTIFIED BY ? "
                     + "GRANT EMPLEADOS TO ?");

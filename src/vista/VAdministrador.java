@@ -45,6 +45,7 @@ public class VAdministrador extends JFrame implements ActionListener {
         this.cc = cc;
         this.cfc = cfc;
         this.cfd = cfd;
+        this.cca=cca;
         ventanaAdministrador();
         initComponentes();
     }

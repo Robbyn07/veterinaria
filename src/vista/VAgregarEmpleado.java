@@ -211,16 +211,21 @@ public class VAgregarEmpleado extends JInternalFrame implements ActionListener{
         cedula= t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
-        //System.out.println("cedula= "+cedula);
-        if(cca.verificarCedula(cedula) == true){
+        System.out.println("cedula= "+cedula);
+        boolean ss = cca.verificarCedula(cedula);
+        if(ss == true){
+            System.out.println("Es true");
             try {
                 if(cca.comprobarCaracteres(nombre) == true
                         && cca.comprobarCaracteres(apellido) == true){
+                    System.out.println("Se comprueban nose que");
                     v = true;
                 }
             } catch (Throwable ex) {
                 Logger.getLogger(VAgregarEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else{
+            System.out.println("Es false");
         }
         
         return v;

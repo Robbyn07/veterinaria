@@ -249,7 +249,6 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
 
             dt.addRow(fila);
         }
-        
     }
     
     String nombre;
@@ -265,7 +264,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
         int n = cm.masObtener(con, cli.getClienteId()).size();
         
         for(int i = 0; i < tb1.getRowCount(); i++){
-            System.out.println("Check: " + tb1.getValueAt(i, 5));
+            
             if((boolean)tb1.getValueAt(i, 5) == true){
                 for(int j = 0; j < n; j++){
                     Mascota mas;
@@ -315,7 +314,6 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
             }
         }  
         
-    }
-    
+    } 
     
 }

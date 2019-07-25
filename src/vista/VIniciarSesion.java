@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import modelo.Empleado;
@@ -136,7 +137,6 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 System.out.println(user);
                 System.out.println(contra);
                 
-                /*
                 //SETEA USUARIO Y CONTRASEÑA CON LOS JTEXTFIELD
                 con.setUserName(user);
                 con.setPassword(contra);
@@ -145,7 +145,8 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 try {
                      con.conectar();
                 } catch (Exception e2) {
-                    e2.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "USUARIO/CONTRASEÑA ERRONEA");
+                     e2.printStackTrace();
                 }
                
                 
@@ -178,9 +179,9 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                     llamarVentanaMedico();
                     setVisible(false);
                 }else{
-                    JOptionPane.showMessageDialog(null, "Vuelva a ingresar los datos");
-                */
-
+                    JOptionPane.showMessageDialog(null, "Error de Base");
+                }
+                /*
                 user = t1.getText();
                 if(user.equals("1")){
                     llamarVentanaAdministrador();
@@ -193,8 +194,9 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 if(user.equals("3")){
                     llamarVentanaMedico();
                     setVisible(false);
-                }
+                }*/
                 break;
+     
         }
      
     }

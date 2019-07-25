@@ -144,15 +144,10 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
                 
             case "agregar":
                 if(comprobarCampos() == true){
-                    if(agregarCliente() == true){
-                        JOptionPane.showMessageDialog(null, "Operación Exitosa");
-                    }else{
-                        JOptionPane.showMessageDialog(null,"Error","No se ha podido "
-                            + "completar la operación",JOptionPane.ERROR_MESSAGE);
-                    }
+                    agregarCliente();
                 }else{
-                    JOptionPane.showMessageDialog(null,"Error","Ingrese correctamente "
-                            + "los campos",JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null,"Ingrese correctamente "
+                            + "los campos","Error",JOptionPane.ERROR_MESSAGE);
                 }
                 
                 break;
@@ -192,8 +187,7 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
         return v;
     }
     
-    private boolean agregarCliente(){
-        v = false;
+    private void agregarCliente(){
         cedula= t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
@@ -210,10 +204,12 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
         cli.setPersonaDireccion(direccion);
         
         if(cc.cliAgregar(con, cli) == true){
-            v = true;
+            JOptionPane.showMessageDialog(null, "Operación Exitosa");
+        }else{
+            JOptionPane.showMessageDialog(null,"No se completó la operación"
+                    ,"Error",JOptionPane.ERROR_MESSAGE);
         }
         
-        return v;
     }
     
 }

@@ -12,6 +12,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -192,28 +193,31 @@ public class VAnularFactura extends JInternalFrame implements ActionListener{
     int numeroF;
     Boolean v;
     FacturaCabecera fc;
+    ArrayList<FacturaDetalle> lista;
     
         public void obtenerInfo(){
             try {
                 numeroF = Integer.parseInt(t1.getText());
 
+                lista = (ArrayList<FacturaDetalle>) cfd.detObtener(con, numeroF);
+                
                 fc = cfc.cabBuscar(con, numeroF);
                 
-                int n = cfd.detObtener(con, numeroF).size();
+                int n = lista.size();
                 
                 for(int i = 0; i < n; i++){
                     Object fila[] = new Object[4];
-                    fila[0] = cfd.detObtener(con, numeroF).get(i).getProducto().
-                            getProductoNombre();
-                    fila[1] = cfd.detObtener(con, numeroF).get(i).getFacturaDetalleCantidad();
-                    fila[2] = cfd.detObtener(con, numeroF).get(i).getFacturaDetallePrecioUnitario();
-                    fila[3] = cfd.detObtener(con, numeroF).get(i).getFacturaDetalleSubtotal();
+                    fila[0] = lista.get(i).getProducto().getProductoNombre();
+                    fila[1] = lista.get(i).getFacturaDetalleCantidad();
+                    fila[2] = lista.get(i).getFacturaDetallePrecioUnitario();
+                    fila[3] = lista.get(i).getFacturaDetalleSubtotal();
                 }
                 
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-                
                 fecha = formato.format(fc.getFacturaCabeceraFecha());
-                nombreC = fc.getCliente().getPersonaNombre();
+                
+                nombreC = fc.getCliente().getPersonaNombre() + " " +
+                        fc.getCliente().getPersonaApellido();
                 telefonoC = fc.getCliente().getPersonaTelefono();
                 direccionC = fc.getCliente().getPersonaDireccion();
                 totalF = Double.toString(fc.getFacturaCabeceraTotal());
@@ -226,6 +230,7 @@ public class VAnularFactura extends JInternalFrame implements ActionListener{
         public boolean anularFactura(){
             v = false;
 
+            fc.setFacturaCabeceraEstado("I");
             if(cfc.cabCancelar(con, fc) == true){
                 v = true;
             }

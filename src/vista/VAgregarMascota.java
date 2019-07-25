@@ -17,6 +17,7 @@ import java.awt.HeadlessException;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import javax.swing.JButton;
@@ -57,15 +58,13 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
     }
     
     public void initComponentes(){
-        setSize(1000,500);
+        setSize(600,300);
         setTitle("Agregar Mascotas");
         setClosable(true);
-        setMaximizable(true);
     }
     
     private JButton b1;
     private JButton b2;
-    private JButton b3;
     private JComboBox<String> cb1;
     private JLabel l2;
     private JLabel l3;
@@ -87,135 +86,110 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
         Container cp = getContentPane();   
         cp.setLayout(new BorderLayout()); 
         
+        JPanel p0 = new JPanel();
+        p0.setLayout(new BorderLayout());
+        
         JPanel p1 = new JPanel();
-        GridBagConstraints g1 = new GridBagConstraints(); 
-        p1.setLayout(new GridBagLayout());
+        p1.setLayout(new FlowLayout());
         
         JLabel l1 = new JLabel("Cédula:");
-        g1.gridx =0;
-        g1.gridy =0;
-        p1.add(l1, g1);
+        p1.add(l1);
         
-        t1 = new JTextField(12);
-        g1.gridx =1;
-        g1.gridy =0;
-        p1.add(t1, g1);
+        t1 = new JTextField(10);
+        p1.add(t1);
         
         b1 = new JButton("Buscar");
-        g1.gridx = 2;
-        g1.gridy = 0;
         b1.addActionListener(this);
         b1.setActionCommand("buscar");
-        p1.add(b1, g1);
+        p1.add(b1);
+        
+        JPanel p2 = new JPanel();
+        p2.setLayout(new FlowLayout());
         
         l2 = new JLabel(nombreC);
-        g1.gridx =0;
-        g1.gridy =1;
-        p1.add(l2, g1);
+        p2.add(l2);
+        
+        JLabel l11 = new JLabel(" ");
+        p2.add(l11);
         
         l3 = new JLabel(telefonoC);
-        g1.gridx =1;
-        g1.gridy =1;
-        p1.add(l3, g1);
+        p2.add(l3);
+        
+        JLabel l12 = new JLabel(" ");
+        p2.add(l12);
         
         l4 = new JLabel(direccionC);
-        g1.gridx =2;
-        g1.gridy =1;
-        p1.add(l4, g1);
+        p2.add(l4);
         
-        Panel p2 = new Panel();
-        p2.setLayout(new GridBagLayout());
+        p0.add(p1, BorderLayout.NORTH);
+        p0.add(p2, BorderLayout.CENTER);
+        
+        Panel p3 = new Panel();
+        p3.setLayout(new BorderLayout());
+        
+        JPanel p4 = new JPanel();
+        p4.setLayout(new FlowLayout());
         
         JLabel l5 = new JLabel("Nombre:");
-        g1.gridx =0;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l5, g1);
+        p4.add(l5);
         
         t2 = new JTextField(10);
-        g1.gridx =1;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(t2, g1);
+        p4.add(t2);
         
         JLabel l6 = new JLabel("Especie:");
-        g1.gridx =2;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l6, g1);
+        p4.add(l6);
         
-        t3 = new JTextField(10);
-        g1.gridx =3;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(t3, g1);
+        t3 = new JTextField(7);
+        p4.add(t3);
         
         JLabel l7 = new JLabel("Raza:");
-        g1.gridx =4;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l7, g1);
+        p4.add(l7);
         
-        t4 = new JTextField(10);
-        g1.gridx =5;
-        g1.gridy =2;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(t4, g1);
+        t4 = new JTextField(7);
+        p4.add(t4);
+        
+        JPanel p5 = new JPanel();
+        p5.setLayout(new FlowLayout());
         
         JLabel l8 = new JLabel("Género:");
-        g1.gridx =0;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l8, g1);
+        p5.add(l8);
         
         cb1 = new JComboBox<>();
             cb1.addItem("Macho");
             cb1.addItem("Hembra");
-        g1.gridx =1;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(cb1, g1);
+        p5.add(cb1);
         
         JLabel l9 = new JLabel("Color:");
-        g1.gridx =2;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l9, g1);
+        p5.add(l9);
         
-        t5 = new JTextField(10);
-        g1.gridx =3;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(t5, g1);
+        t5 = new JTextField(6);
+        p5.add(t5);
         
         JLabel l10 = new JLabel("Año de Nacimiento:");
-        g1.gridx =4;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(l10, g1);
+        p5.add(l10);
         
         yc = new JYearChooser();
-        g1.gridx =5;
-        g1.gridy =4;
-        g1.fill = GridBagConstraints.HORIZONTAL;
-        p2.add(yc, g1);
+        p5.add(yc);
 
-        Panel p3 = new Panel();
+        p3.add(p4, BorderLayout.NORTH);
+        p3.add(p5, BorderLayout.CENTER);
+        
+        Panel p6 = new Panel();
         p3.setLayout(new FlowLayout());
 
         b1 = new JButton("Volver");
         b1.addActionListener(this);
         b1.setActionCommand("volver");
-        p3.add(b1, g1);
+        p6.add(b1);
         
         b2 = new JButton("Registrar");
         b2.addActionListener(this);
         b2.setActionCommand("registrar");
-        p3.add(b2, g1); 
+        p6.add(b2); 
         
-        cp.add(p1, BorderLayout.NORTH);
-        cp.add(p2, BorderLayout.CENTER);
-        cp.add(p3, BorderLayout.SOUTH);
+        cp.add(p0, BorderLayout.NORTH);
+        cp.add(p3, BorderLayout.CENTER);
+        cp.add(p6, BorderLayout.SOUTH);
     }
 
     @Override
@@ -233,53 +207,44 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
                 break;
                 
             case "registrar":
-                if(agregarMascota() == true){
-                    JOptionPane.showMessageDialog(null, "Operación Exitosa");
-                }
-                
+                agregarMascota();
                 break;
  
         }
     }
     
+    Cliente cli;
+    
     public void buscarCliente(){
         cedula = t1.getText();
         
+        cli = cc.cliBuscar(con, cedula);
+        
         try {
             if(cca.verificarCedula(cedula) == true){
-                if(cc.cliBuscar(con, cedula).getPersonaCedula().equals(cedula)){
-                    nombreC = cc.cliBuscar(con, cedula).getPersonaNombre();
-                    l2.setText(nombreC);
-                    
-                    telefonoC = cc.cliBuscar(con, cedula).getPersonaTelefono();
-                    l3.setText(title);
-                    
-                    direccionC = cc.cliBuscar(con, cedula).getPersonaDireccion();
-                    l4.setText(title); 
-                }else{
-                    JOptionPane.showMessageDialog(null,"Error","El cliente no"
-                            + " existe",JOptionPane.ERROR_MESSAGE);
-                }
+                
+                nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
+
+                telefonoC = cli.getPersonaTelefono();
+
+                direccionC = cli.getPersonaDireccion();
             }
         } catch (HeadlessException e) {
-            JOptionPane.showMessageDialog(null,"Error","Verifique la cédula",
+            JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
         }
     }
     
-    String nombre;
+    String nombreM;
     String especie;
     String raza;
     String genero;
     String color;
     int anio;
-    String anio2;
-    Boolean v;
+    String anioS;
     
-    public boolean agregarMascota(){
-        v = false;
-        cedula = t1.getText();
-        nombre = t2.getText();
+    public void agregarMascota(){
+        nombreM = t2.getText();
         especie = t3.getText();
         raza = t4.getText();
         genero = cb1.getSelectedItem().toString();
@@ -287,18 +252,16 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
         anio = yc.getYear();
         
         try {
-            anio2 = Integer.toString(anio);
+            anioS = Integer.toString(anio);
             SimpleDateFormat fec = new SimpleDateFormat("yyyy");
-            java.util.Date dateN = fec.parse(anio2);
+            Date dateN = fec.parse(anioS);
             java.sql.Date fechaN = new java.sql.Date(dateN.getTime()); 
             
-            Cliente cli;
-            cli = cc.cliBuscar(con, cedula);
             Mascota mas = new Mascota();
             Especie esp = ces.espBuscar(con, especie);
-            Raza raz = cr.razBuscar(con, nombre);
+            Raza raz = cr.razBuscar(con, raza);
             
-            mas.setMascotaNombre(nombre);
+            mas.setMascotaNombre(nombreM);
             
             if(esp == null){
                 esp = new Especie();
@@ -320,13 +283,15 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
             
             if(cm.masAgregar(con, mas, cli.getClienteId())==true){
                 cli.addMascotas(mas);
-                v = true;
+                JOptionPane.showMessageDialog(null,"Operación Exitosa");
+            }else{
+                JOptionPane.showMessageDialog(null,"No se completó la operación"
+                        ,"Error",JOptionPane.ERROR_MESSAGE); 
             }
             
         } catch (ParseException e) {
             e.printStackTrace();
         }
         
-        return v;
     }
 }

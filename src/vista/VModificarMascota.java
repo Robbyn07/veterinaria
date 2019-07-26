@@ -223,7 +223,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     
     public void mostrar(){
         
-        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());
+        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());//no seria necesario, porque cli ya contiene sus mascotas y solo tendria que listarlo, para no volver a llamar este metodo
         
         int n = lista.size();
         
@@ -254,49 +254,49 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
             
             if((boolean)tb1.getValueAt(i, 5) == true){
                 Mascota mas;
-                
-                for(int j = 0; j < n; j++){
-                    mas = cm.masBuscar(con, cli.getMascotas().get(j).getMascotaId());
-                    
-                    especie = String.valueOf(dt.getValueAt(i,1));
-                    raza = String.valueOf(dt.getValueAt(i,2));
-                    genero = String.valueOf(tb1.getModel().getValueAt(i, 3));
-                    color = String.valueOf(dt.getValueAt(i, 4));
-                    
-                    Especie esp = ces.espBuscar(con, especie);
-                    Raza raz = cr.razBuscar(con, raza);
+                //se le quito el segundo for
+                mas = cm.masBuscar(con, cli.getMascotas().get(i).getMascotaId());
 
-                    if(esp == null){
-                        esp = new Especie();
-                        esp.setEspecieNombre(especie);
-                        ces.espAgregar(con, esp);
-                    }
+                especie = String.valueOf(dt.getValueAt(i,1));
+                raza = String.valueOf(dt.getValueAt(i,2));
+                genero = String.valueOf(tb1.getModel().getValueAt(i, 3));
+                color = String.valueOf(dt.getValueAt(i, 4));
 
-                    if(raz == null){
-                        raz = new Raza();
-                        raz.setRazaNombre(raza);
-                        cr.razAgregar(con, raz);
-                    }
-                    
-                    mas.setEspecie(esp);
-                    mas.setRaza(raz);
-                    mas.setMascotaGenero(genero);
-                    mas.setMascotaColor(color);
-                    
-                    int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                            "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
-        
-                    if(res == 0){
-                        if(cm.masEditar(con, mas) == true){
-                            JOptionPane.showMessageDialog(null, "Operación Exitosa");
-                        }else{
-                            JOptionPane.showMessageDialog(null,"No se completó la"
-                                    + " operación","Error",JOptionPane.ERROR_MESSAGE); 
-                            break;
-                        }
+                Especie esp = ces.espBuscar(con, especie);
+                Raza raz = cr.razBuscar(con, raza);
+
+                if(esp == null){
+                    esp = new Especie();
+                    esp.setEspecieNombre(especie);
+                    ces.espAgregar(con, esp);
+                    esp = ces.espBuscar(con, especie);//agregado
+                }
+
+                if(raz == null){
+                    raz = new Raza();
+                    raz.setRazaNombre(raza);
+                    cr.razAgregar(con, raz);
+                    raz = cr.razBuscar(con, raza);//agregado
+                }
+
+                mas.setEspecie(esp);
+                mas.setRaza(raz);
+                mas.setMascotaGenero(genero);
+                mas.setMascotaColor(color);
+
+                int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
+                        "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+
+                if(res == 0){
+                    if(cm.masEditar(con, mas) == true){
+                        JOptionPane.showMessageDialog(null, "Operación Exitosa");
                     }else{
-
+                        JOptionPane.showMessageDialog(null,"No se completó la"
+                                + " operación","Error",JOptionPane.ERROR_MESSAGE); 
+                        break;
                     }
+                }else{
+
                 }
             }
         }  

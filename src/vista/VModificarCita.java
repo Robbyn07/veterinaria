@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -171,7 +172,7 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         cedula = t1.getText();
         
         cli = cc.cliBuscar(con, cedula);
-        ArrayList<Mascota> listaM = (ArrayList<Mascota>) cli.getMascotas();
+        ArrayList<Mascota> listaM = (ArrayList<Mascota>) cli.getMascotas();//igual, no seria necesario
         ArrayList<Cita> listaC;
                 
         int n = listaM.size();
@@ -179,12 +180,12 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
         for(int i = 0; i < n; i++){
             mas = listaM.get(i);
             
-            listaC = (ArrayList<Cita>) mas.getCitas();
+            listaC = (ArrayList<Cita>) mas.getCitas();//las mascotas del cliente ya tendrian sus citas
             
             int m = listaC.size();
             
             for(int j = 0; j < m; j++){
-                cit = listaC.get(i);
+                cit = listaC.get(j);//estaba con listaC.get(i)
                 
                 if(listaC.get(j) != null){
                     Object fila[] = new Object[6];
@@ -236,13 +237,32 @@ public class VModificarCita extends JInternalFrame implements ActionListener{
     
     
     public void eliminarCita(){
+        /*
         for(int i = 0; i < tb1.getRowCount(); i++){
             
             if((boolean)tb1.getValueAt(i, 5) == true){
                 cit = cct.citBuscar(con, (int) tb1.getValueAt(i, 0));
                 mas.eliminarCitas(cit);
             }
+        }*/
+        
+        for(int i = 0; i < tb1.getRowCount(); i++){
+            
+            if((boolean)tb1.getValueAt(i, 5) == true){
+                cit = cct.citBuscar(con, (int) tb1.getValueAt(i, 0));
+                //mas.eliminarCitas(cit);
+                
+                //agregado para eliminar la cita en la base:
+                if(cct.citEliminar(con,(int) tb1.getValueAt(i, 0)) == true){
+                    mas.eliminarCitas(cit);
+                    JOptionPane.showMessageDialog(null, "Operación Exitosa"); 
+                }else{
+                    JOptionPane.showMessageDialog(null,"No se completó "
+                            + "la operación","Error",JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
+        
     }
     
 }

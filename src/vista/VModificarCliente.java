@@ -200,7 +200,7 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         try {
             if(cca.verificarCedula(cedula) == true){
                 if(cli.getPersonaCedula().equals(cedula)){
-                    nombre = cc.cliBuscar(con, cedula).getPersonaNombre();
+                    nombre = cc.cliBuscar(con, cedula).getPersonaNombre();//se puede mejorar? para no llamar otra vez al metodo: nombre=cli.getPersonaNombre()
                     t2.setText(nombre);
 
                     apellido = cli.getPersonaApellido();

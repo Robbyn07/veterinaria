@@ -331,12 +331,15 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     int id;
 
     public String generarNF(){
+        /*
         ArrayList<FacturaCabecera> lista = (ArrayList<FacturaCabecera>) cfc.cabObtener(con);
         int n = lista.size();
         
         for(int i = 0; i < n; i++){
             id = lista.get(i).getFacturaCabeceraNumero();
-        }
+        }*/
+        
+        id = cfc.obtenerId(con);
         
         id = id + 1;
         ids = Integer.toString(id);
@@ -406,7 +409,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         pro = cpd.proBuscar(con, producto);
         
         if(pro != null){
-            if(cantidad == 0){
+            if(cantidad == 0){//menor o igual?
                 JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida",
                         "Error",JOptionPane.ERROR_MESSAGE);
             }else{
@@ -414,6 +417,9 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                     JOptionPane.showMessageDialog(null,"Revise el stock del producto",
                         "Error",JOptionPane.ERROR_MESSAGE);
                 }else{
+                    //agregado
+                    precioU = pro.getProductoPrecioVenta();
+                    //hasta aqui 
                     Object fila[] = new Object[4];
                     fila[0] = pro.getProductoNombre();
                     fila[1] = cantidad;
@@ -484,9 +490,12 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             fc.setFacturaCabeceraIva(iva);
             fc.setFacturaCabeceraDescuento(descuento);
             fc.setFacturaCabeceraTotal(totalC);
+            //se agrega antes para que al momento de  que el detalle se agregue, tenga la foreing key de la cabecera
             cfc.cabAgregar(con, fc);
             
-            int idFC = Integer.parseInt(ids);
+            
+            
+            int idFC = Integer.parseInt(ids);//para esto, ids debe ser seteado en la ventana, lo cual creo que no esta aun, porque siempre se inicia con 13
             
             for(int i = 0; i < tb1.getRowCount(); i++){
                 pro = cpd.proBuscar(con, (String) tb1.getValueAt(i,0));
@@ -501,6 +510,8 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 cfd.detAgregar(con, fd, idFC);
                 fc.addFacturasDetalle(fd);
             }
+            
+            //cfc.cabAgregar(con, fc);
             
             Object[] options = {"Efectivo",
                                 "Tarjeta"};

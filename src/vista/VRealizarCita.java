@@ -255,7 +255,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
     ArrayList<Mascota> lista;
     
     public void mostrar(){
-        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());
+        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());//las mascotas ya estarian dentro del cliente
         int n = lista.size();
         
         for(int i = 0; i < n; i++){
@@ -297,24 +297,21 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
                 
                 if((boolean)tb1.getValueAt(i, 1) == true){
                     mascota = (String) tb1.getValueAt(i, 0);
-                    
-                    for(int j = 0; j < n; j++){
-                        mas = cm.masBuscar(con, lista.get(j).getMascotaId());
-                        
-                        if(mas.getMascotaNombre().equals(mascota)){
-                            cit.setCitaFecha(dateN);
+                    //se elimino el segundo for
+                    mas = cm.masBuscar(con, lista.get(i).getMascotaId());//se podria usar la mascota del cliente ya guardado
 
-                            if(cct.citAgregar(con,cit,mas.getMascotaId()) == true){
-                                mas.addCitas(cit);
-                                JOptionPane.showMessageDialog(null, "Operación Exitosa"); 
-                                v = true;
-                                break;
-                            }else{
-                                JOptionPane.showMessageDialog(null,"No se completó "
-                                        + "la operación","Error",JOptionPane.ERROR_MESSAGE);
-                            }
+                    if(mas.getMascotaNombre().equals(mascota)){
+                        cit.setCitaFecha(dateN);
+
+                        if(cct.citAgregar(con,cit,mas.getMascotaId()) == true){
+                            mas.addCitas(cit);
+                            JOptionPane.showMessageDialog(null, "Operación Exitosa"); 
+                            v = true;
+                            break;
+                        }else{
+                            JOptionPane.showMessageDialog(null,"No se completó "
+                                    + "la operación","Error",JOptionPane.ERROR_MESSAGE);
                         }
-                        
                     }
                 }
             }    

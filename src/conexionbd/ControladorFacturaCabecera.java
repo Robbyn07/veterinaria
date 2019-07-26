@@ -123,7 +123,7 @@ public class ControladorFacturaCabecera {
     }
     
     
-    private int obtenerId(Conexion con){
+    public int obtenerId(Conexion con){
         int cabeceraNumero=0;
         try {
             
@@ -170,12 +170,12 @@ public class ControladorFacturaCabecera {
                 sentencia.setInt(9, facturaCabecera.getCliente().getClienteId());
                 
                 sentencia.executeUpdate();
-                
+                /*
                 int cabeceraNumero=controladorFacturaCabecera.obtenerId(con);
                 
                 for(int i=0; i<facturaCabecera.getFacturasDetalle().size();i++){
                     controladorFacturaDetalle.detAgregar(con, facturaCabecera.getFacturasDetalle().get(i), cabeceraNumero);
-                }
+                }*/
 
                 return true;
                 

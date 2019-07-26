@@ -188,6 +188,29 @@ public class ControladorCita {
             return false;
         
     }
+    //metodo agregado
+    public boolean citEliminar(Conexion con, int id){
+        
+        if(citBuscar(con, id)!=null){
+            try {
+                
+                sentencia = con.getConexion().prepareStatement("DELETE FROM vet_citas  "
+                + "WHERE cit_id=?");
+
+                sentencia.setInt(1, id);
+                sentencia.executeUpdate();
+
+                return true;
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            
+        } else
+            return false;
+        
+    }
 
     
     

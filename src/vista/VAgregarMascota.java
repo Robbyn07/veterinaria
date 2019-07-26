@@ -267,12 +267,14 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
                 esp = new Especie();
                 esp.setEspecieNombre(especie);
                 ces.espAgregar(con, esp);
+                esp = ces.espBuscar(con, especie);//agregado
             }
             
             if(raz == null){
                 raz = new Raza();
                 raz.setRazaNombre(raza);
                 cr.razAgregar(con, raz);
+                raz = cr.razBuscar(con, raza);//agregado
             }
             
             mas.setEspecie(esp);

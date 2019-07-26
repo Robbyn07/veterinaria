@@ -71,6 +71,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
     
     public void initComponentes(){
         setSize(800,500);
+        setClosable(true);
         setTitle("Realizar Cita");
     }
     
@@ -247,6 +248,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
                 
             }
         } catch (HeadlessException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
         }
@@ -255,7 +257,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
     ArrayList<Mascota> lista;
     
     public void mostrar(){
-        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());//las mascotas ya estarian dentro del cliente
+        lista = (ArrayList<Mascota>) cli.getMascotas();//las mascotas ya estarian dentro del cliente
         int n = lista.size();
         
         for(int i = 0; i < n; i++){
@@ -291,8 +293,6 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
             
             cit = new Cita();
             
-            int n = lista.size();
-            
             for(int i = 0; i < tb1.getRowCount(); i++){
                 
                 if((boolean)tb1.getValueAt(i, 1) == true){
@@ -305,8 +305,8 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
 
                         if(cct.citAgregar(con,cit,mas.getMascotaId()) == true){
                             mas.addCitas(cit);
-                            JOptionPane.showMessageDialog(null, "Operación Exitosa"); 
                             v = true;
+                            JOptionPane.showMessageDialog(null, "Operación Exitosa");
                             break;
                         }else{
                             JOptionPane.showMessageDialog(null,"No se completó "
@@ -444,7 +444,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
             //Mensaje de creacio
             JOptionPane.showMessageDialog(null, "Se creo el PDF");
         } catch (Exception e) {
-            System.out.println("Error");
+            e.printStackTrace();
         }
         
         //Codigo para que el pdf se abra al crearse
@@ -452,7 +452,7 @@ public class VRealizarCita extends JInternalFrame implements ActionListener{
                 File rutaA = new File(ruta + ".pdf");
                 Desktop.getDesktop().open(rutaA);
             } catch (Exception e) {
-                System.out.println("No se abrio el pdf");
+                e.printStackTrace();
             }
    
     }

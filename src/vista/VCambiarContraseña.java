@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import modelo.Empleado;
 
 /**
  *
@@ -21,10 +22,12 @@ public class VCambiarContraseña extends JInternalFrame implements ActionListene
     
     Conexion con;
     ControladorEmpleado cem;
+    Empleado emp;
     
-    public VCambiarContraseña(Conexion con,ControladorEmpleado cem){
+    public VCambiarContraseña(Conexion con,ControladorEmpleado cem,Empleado emp){
         this.con = con;
         this.cem = cem;
+        this.emp = emp;
         initComponentes();
         ventanaCambiarC();
     }

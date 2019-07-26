@@ -199,8 +199,7 @@ public class VAnularFactura extends JInternalFrame implements ActionListener{
             try {
                 numeroF = Integer.parseInt(t1.getText());
 
-                lista = (ArrayList<FacturaDetalle>) cfd.detObtener(con, numeroF);//con buscar la cabecera seria suficiente
-                
+                lista = (ArrayList<FacturaDetalle>) cfd.detObtener(con, numeroF);//con buscar la cabecera seria suficiente 
                 fc = cfc.cabBuscar(con, numeroF);
                 
                 int n = lista.size();

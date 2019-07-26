@@ -1,6 +1,13 @@
 
 package vista;
 
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.mxrck.autocompleter.TextAutoCompleter;
 import conexionbd.Conexion;
 import conexionbd.ControladorCaracter;
@@ -10,12 +17,15 @@ import conexionbd.ControladorFacturaDetalle;
 import conexionbd.ControladorProducto;
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -25,6 +35,7 @@ import java.util.GregorianCalendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -120,7 +131,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         g1.gridy =0;
         p1.add(l1, g1);
         
-        l2 = new JLabel("13");
+        l2 = new JLabel(generarNF());
         g1.gridx =1;
         g1.gridy =0;
         p1.add(l2, g1);
@@ -339,9 +350,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             id = lista.get(i).getFacturaCabeceraNumero();
         }*/
         
-        id = cfc.obtenerId(con);
-        
-        id = id + 1;
+        id = cfc.obtenerId(con) + 1;
         ids = Integer.toString(id);
         return ids;
     }
@@ -493,8 +502,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             //se agrega antes para que al momento de  que el detalle se agregue, tenga la foreing key de la cabecera
             cfc.cabAgregar(con, fc);
             
-            
-            
+
             int idFC = Integer.parseInt(ids);//para esto, ids debe ser seteado en la ventana, lo cual creo que no esta aun, porque siempre se inicia con 13
             
             for(int i = 0; i < tb1.getRowCount(); i++){
@@ -542,5 +550,151 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         vpt.setVisible(true);
         
         escritorio.add(vpt);
+    }
+    
+    String ruta;
+    
+    public void imprimirFactura(){
+        
+        JFileChooser elegir = new JFileChooser();
+        int opcion = elegir.showSaveDialog(this);
+        if (opcion == JFileChooser.APPROVE_OPTION){
+            File f = elegir.getSelectedFile();
+            ruta = f.toString();
+        }
+        
+        
+        try {
+            //Crea el documento con la ruta seleccionada y su extension
+            FileOutputStream documento = new FileOutputStream(ruta + ".pdf");
+            
+            //Instancia el documento para editarlo
+            Document pdf = new Document();
+            
+            PdfWriter writer = null;
+            
+            try {
+                //Instancia para comenzar a editar el pdf
+                writer = PdfWriter.getInstance(pdf, documento);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        
+            //De aqui comienza la edicion del documento .pdf
+            pdf.open();
+            
+            //Datos iniciales de la plantilla
+            Paragraph tituloP = new Paragraph();
+            tituloP.setAlignment(Paragraph.ALIGN_CENTER);
+            tituloP.add("FACTURA Nº" + ids);
+            
+            Image imagen;
+            imagen = Image.getInstance("src/imagenes/UPSlogo.png");
+            imagen.setAlignment(Image.ALIGN_CENTER);
+            imagen.scaleAbsoluteWidth(140f);
+            imagen.scaleAbsoluteHeight(40f);
+            
+            //Separacion entre parrafos 1
+            Paragraph saltoLinea1 = new Paragraph();
+            saltoLinea1.add("\n");
+            
+            Paragraph tituloV = new Paragraph();
+            tituloV.setAlignment(Paragraph.ALIGN_LEFT);
+            tituloV.add("LPRT Veterinaria");
+            
+            Paragraph infoFecha = new Paragraph();
+            infoFecha.setAlignment(Paragraph.ALIGN_LEFT);
+            infoFecha.add("Fecha: " + fecha);
+            
+            Paragraph clienteDireccion = new Paragraph();
+            clienteDireccion.setAlignment(Paragraph.ALIGN_LEFT);
+            clienteDireccion.add("Dirección: " + direccion);
+            
+            Chunk ch1 = new Chunk("Subtotal: " + subtotalC);
+            Chunk ch2 = new Chunk("IVA%: " + iva);
+            Chunk ch3 = new Chunk("Total: " + totalC);
+            Chunk ch4 = new Chunk("\t\t\t\t\t");
+            
+            
+            Paragraph facturaCabe = new Paragraph();
+            facturaCabe.setAlignment(Paragraph.ALIGN_CENTER);
+            facturaCabe.add(ch1);
+            facturaCabe.add(ch4);
+            facturaCabe.add(ch2);
+            facturaCabe.add(ch4);
+            facturaCabe.add(ch3);
+
+            
+            PdfPTable table = new PdfPTable(4);
+
+            //Celdas de la tabla con la informacion 
+            Paragraph columna1 = new Paragraph("Producto");
+            table.addCell(columna1);
+            
+            Paragraph columna2 = new Paragraph("Cantidad");
+            table.addCell(columna2);
+            
+            Paragraph columna3 = new Paragraph("Precio U.");
+            table.addCell(columna3);
+            
+            Paragraph columna4 = new Paragraph("Subtotal");
+            table.addCell(columna4);
+            
+            FacturaCabecera fac = cfc.cabBuscar(con, cfc.obtenerId(con));
+            ArrayList<FacturaDetalle> lista = (ArrayList<FacturaDetalle>) fac.getFacturasDetalle();
+            
+            int n = lista.size();
+            
+            for(int i = 0; i < n; i++){
+                table.addCell(lista.get(i).getProducto().getProductoNombre());
+                String pdfCantidad = Integer.toString(lista.get(i).getFacturaDetalleCantidad());
+                table.addCell(pdfCantidad);
+                String pdfPrecio = Double.toString(lista.get(i).getFacturaDetallePrecioUnitario());
+                table.addCell(pdfPrecio);
+                String pdfSubD = Double.toString(lista.get(i).getFacturaDetalleSubtotal());
+                table.addCell(pdfSubD);
+            }
+
+            //Agregamos los parrafos y titulos
+            try{
+                pdf.add(tituloP);
+                pdf.add(saltoLinea1);
+                pdf.add(imagen);
+                pdf.add(saltoLinea1);
+                pdf.add(tituloV);
+                pdf.add(saltoLinea1);
+                pdf.add(infoFecha);
+                pdf.add(new Chunk("Cliente: " + nombre +" "+ apellido));
+                pdf.add(new Chunk("\n"));
+                pdf.add(new Chunk("Cédula: " + cedula));
+                pdf.add(new Chunk("\t\t\t\t\t"));
+                pdf.add(new Chunk("Teléfono: " + telefono));
+                pdf.add(clienteDireccion);
+                pdf.add(saltoLinea1);
+                pdf.add(table);
+                pdf.add(saltoLinea1);
+                pdf.add(facturaCabe);
+                
+            
+            }catch(DocumentException ex){
+                ex.getMessage();
+            }
+            
+            pdf.close();
+            
+            //Mensaje de creacion
+            JOptionPane.showMessageDialog(null, "Se creo el PDF");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        //Codigo para que el pdf se abra al crearse
+        try {
+                File rutaA = new File(ruta + ".pdf");
+                Desktop.getDesktop().open(rutaA);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+   
     }
 }

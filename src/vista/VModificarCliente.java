@@ -199,27 +199,24 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         
         try {
             if(cca.verificarCedula(cedula) == true){
-                if(cli.getPersonaCedula().equals(cedula)){
-                    nombre = cc.cliBuscar(con, cedula).getPersonaNombre();//se puede mejorar? para no llamar otra vez al metodo: nombre=cli.getPersonaNombre()
-                    t2.setText(nombre);
+                nombre = cli.getPersonaNombre();//se puede mejorar? para no llamar otra vez al metodo: nombre=cli.getPersonaNombre()
+                t2.setText(nombre);
 
-                    apellido = cli.getPersonaApellido();
-                    t3.setText(apellido);
+                apellido = cli.getPersonaApellido();
+                t3.setText(apellido);
 
-                    telefono = cli.getPersonaTelefono();
-                    t4.setText(telefono);
+                telefono = cli.getPersonaTelefono();
+                t4.setText(telefono);
 
-                    email = cli.getPersonaEmail();
-                    t5.setText(email);
+                email = cli.getPersonaEmail();
+                t5.setText(email);
 
-                    direccion = cli.getPersonaDireccion();
-                    t6.setText(direccion);  
-                }else{
-                    JOptionPane.showMessageDialog(null,"El cliente no existe",
-                            "Error",JOptionPane.ERROR_MESSAGE);
-                }
+                direccion = cli.getPersonaDireccion();
+                t6.setText(direccion);  
+               
             }
         } catch (HeadlessException e) {
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
         }

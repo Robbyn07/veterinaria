@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import javax.swing.*;
+import modelo.Empleado;
 
 /**
  *
@@ -46,13 +47,14 @@ public class VMedico extends JFrame implements ActionListener{
     ControladorDiagnostico cd;
     ControladorRecetaCabecera crc;
     ControladorRecetaDetalle crd;
+    Empleado emp;
     
     public VMedico(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
             ControladorProducto cpd,ControladorCliente cc,ControladorMascota cm,
             ControladorEspecie ces,ControladorRaza cr,ControladorCita cct,
             ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
             ControladorDiagnostico cd,ControladorRecetaCabecera crc,
-            ControladorRecetaDetalle crd){
+            ControladorRecetaDetalle crd,Empleado emp){
         this.con = con;
         this.cca = cca;
         this.cem = cem;
@@ -131,8 +133,8 @@ public class VMedico extends JFrame implements ActionListener{
                 break;
             
             case "cambiarC":
-                llamarVentanaHistorialM();
-                break;    
+                llamarVentanaCambiarContrasena();
+                break;   
                 
             case "cerrarS":
                 llamarVentanaCerrarS();
@@ -143,7 +145,7 @@ public class VMedico extends JFrame implements ActionListener{
     }
 
     private void llamarVentanaDiagnosticoM() {
-        VDiagnostico vD = new VDiagnostico(con,cem,cc,cm,ces,cr,cct,cd);
+        VDiagnostico vD = new VDiagnostico(con,cem,cc,cm,cct,cd,crc,crd,emp);
         vD.setVisible(true);
         
         escritorioM.add(vD);
@@ -155,12 +157,24 @@ public class VMedico extends JFrame implements ActionListener{
     }
 
     private void llamarVentanaHistorialM() {
-        VHistorial vH = new VHistorial();
+        VHistorial vH = new VHistorial(con,cca,cc,cd);
         vH.setVisible(true);
         
         escritorioM.add(vH);
         try {
 	vH.setSelected(true);
+	} catch (PropertyVetoException e) {
+		e.printStackTrace();
+	}
+    }
+    
+    private void llamarVentanaCambiarContrasena(){
+        VCambiarContraseña vcc = new VCambiarContraseña(con, cem, emp);
+        vcc.setVisible(true);
+        
+        escritorioM.add(vcc);
+        try {
+	vcc.setSelected(true);
 	} catch (PropertyVetoException e) {
 		e.printStackTrace();
 	}

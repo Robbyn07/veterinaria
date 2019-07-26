@@ -130,6 +130,29 @@ public class ControladorDiagnostico {
         
     }
     
+    public int obtenerId(Conexion con){
+        int diaId=0;
+        try { 
+            sentencia = con.getConexion().prepareStatement("SELECT max(dia_id) "
+            + "FROM vet_diagnosticos");
+            resultado= sentencia.executeQuery();
+
+            while(resultado.next()){
+                diaId = resultado.getInt("dia_id");
+
+            }
+
+            return diaId;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return 0;
+
+        }
+        
+    }
+    
 }
 
 

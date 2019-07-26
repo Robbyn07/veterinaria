@@ -129,6 +129,27 @@ public class ControladorRecetaCabecera {
         
     }
     
+    public int obtenerId(Conexion con){
+        int recId=0;
+        
+        try {          
+            sentencia = con.getConexion().prepareStatement("SELECT max(rec_id) "
+            + "FROM vet_receta_Cabeceras");
+            resultado= sentencia.executeQuery();
+
+            while(resultado.next()){
+                recId = resultado.getInt("rec_id");
+
+            }
+            return recId;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            return 0;
+        } 
+    }
+    
 }
 
 

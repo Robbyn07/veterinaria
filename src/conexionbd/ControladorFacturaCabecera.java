@@ -150,8 +150,8 @@ public class ControladorFacturaCabecera {
     
     
     public boolean cabAgregar(Conexion con, FacturaCabecera facturaCabecera){
-        ControladorFacturaDetalle controladorFacturaDetalle = new ControladorFacturaDetalle();
-        ControladorFacturaCabecera controladorFacturaCabecera = new ControladorFacturaCabecera();
+        //ControladorFacturaDetalle controladorFacturaDetalle = new ControladorFacturaDetalle();
+        //ControladorFacturaCabecera controladorFacturaCabecera = new ControladorFacturaCabecera();
         if(cabBuscar(con, facturaCabecera.getFacturaCabeceraNumero())==null){
             
             try {

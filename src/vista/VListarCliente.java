@@ -37,7 +37,6 @@ public class VListarCliente extends JInternalFrame implements ActionListener{
         setSize(800,400);
         setTitle("Listar Clientes");
         setClosable(true);
-        setMaximizable(true);
     }
     
     private JButton b1;

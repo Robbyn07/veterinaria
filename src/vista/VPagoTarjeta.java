@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,7 +30,6 @@ public class VPagoTarjeta extends JInternalFrame implements ActionListener{
     
     private JButton b1;
     private JButton b2;
-    private JButton b3;
     
     public void ventanaPagoTar(){
         Container cp = getContentPane();

@@ -223,7 +223,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     
     public void mostrar(){
         
-        lista = (ArrayList<Mascota>) cm.masObtener(con, cli.getClienteId());//no seria necesario, porque cli ya contiene sus mascotas y solo tendria que listarlo, para no volver a llamar este metodo
+        lista = (ArrayList<Mascota>) cli.getMascotas();//no seria necesario, porque cli ya contiene sus mascotas y solo tendria que listarlo, para no volver a llamar este metodo
         
         int n = lista.size();
         

@@ -11,8 +11,6 @@ import conexionbd.ControladorRaza;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
@@ -224,9 +222,7 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
             if(cca.verificarCedula(cedula) == true){
                 
                 nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
-
                 telefonoC = cli.getPersonaTelefono();
-
                 direccionC = cli.getPersonaDireccion();
             }
         } catch (HeadlessException e) {

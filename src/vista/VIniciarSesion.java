@@ -206,7 +206,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     //Esperar a terminar Controlador
     Empleado emp;
     public void comprobarTipo(){
-        
+        emp = cem.empBuscarUsername(con, user);
     }
     
     public void llamarVentanaAdministrador(){
@@ -215,12 +215,13 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaSecretaria(){
-        VSecretaria vS = new VSecretaria(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
+        VSecretaria vS = new VSecretaria(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,
+                cd,crc,crd,emp);
         vS.setVisible(true); 
     }
     
     public void llamarVentanaMedico(){
-        VMedico vM = new VMedico(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd);
+        VMedico vM = new VMedico(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd,emp);
         vM.setVisible(true); 
     }
 }

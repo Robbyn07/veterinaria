@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package conexionbd;
 
 import java.sql.Date;
@@ -97,8 +93,8 @@ public class ControladorCita {
             return null;
             
         }
-        
     }
+    
     
     public Cita citBuscar(Conexion con, int citaId){
         Cita cita = new Cita();
@@ -120,8 +116,7 @@ public class ControladorCita {
                 diagnostico = controladorDiagnostico.diaObtener(con, citaId);
                 
                     cita.setDiagnostico(diagnostico);
-                
-                
+
             }
             
             return cita;
@@ -131,8 +126,7 @@ public class ControladorCita {
             
             return null;
             
-        }
-        
+        } 
     }
     
     

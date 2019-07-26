@@ -10,24 +10,25 @@ import conexionbd.ControladorCita;
 import conexionbd.ControladorCliente;
 import conexionbd.ControladorDiagnostico;
 import conexionbd.ControladorEmpleado;
-import conexionbd.ControladorEspecie;
 import conexionbd.ControladorMascota;
-import conexionbd.ControladorRaza;
+import conexionbd.ControladorRecetaCabecera;
+import conexionbd.ControladorRecetaDetalle;
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -39,7 +40,10 @@ import javax.swing.table.DefaultTableModel;
 import modelo.Cita;
 import modelo.Cliente;
 import modelo.Diagnostico;
+import modelo.Empleado;
 import modelo.Mascota;
+import modelo.RecetaCabecera;
+import modelo.RecetaDetalle;
 
 /**
  *
@@ -47,32 +51,36 @@ import modelo.Mascota;
  */
 public class VDiagnostico extends JInternalFrame implements ActionListener{
    
+    Calendar fecha;
     Conexion con;
     ControladorEmpleado cem;
     ControladorCliente cc;
     ControladorMascota cm;
-    ControladorEspecie ces;
-    ControladorRaza cr;
     ControladorCita cct;
     ControladorDiagnostico cd;
+    ControladorRecetaCabecera crc;
+    ControladorRecetaDetalle crd;
+    Empleado emp;
     
     public VDiagnostico(Conexion con,ControladorEmpleado cem,ControladorCliente cc,
-            ControladorMascota cm,ControladorEspecie ces,ControladorRaza cr,
-            ControladorCita cct,ControladorDiagnostico cd){
+            ControladorMascota cm,ControladorCita cct,ControladorDiagnostico cd,
+            ControladorRecetaCabecera crc,ControladorRecetaDetalle crd,Empleado emp){
         this.con = con;
         this.cem = cem;
         this.cc = cc;
         this.cm = cm;
-        this.ces = ces;
-        this.cr = cr;
         this.cct = cct;
         this.cd = cd;
+        this.crc = crc;
+        this.crd = crd;
+        this.emp = emp;
         initComponentes();
         ventanaDiagnostico();
            
     }
+    
     private void initComponentes() {
-        setSize(1000, 600);
+        setSize(1000, 700);
         setTitle("Diagnosticos");
         setClosable(true);
     }
@@ -81,11 +89,13 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
     private JTable tb1;
     private JScrollPane scr1;
     private JScrollPane scr2;
+    private JScrollPane scr3;
     private boolean[] editable = {false, false, false};
     
     private JButton b1;
     private JButton b2;
     private JButton b3;
+    private JButton b4;
     private JLabel l2;
     private JLabel l3;
     private JLabel l4;
@@ -95,7 +105,10 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
     private JLabel l8;
     private JLabel l9;
     private JTextField t1;
+    private JTextField t2;
+    private JTextField t3;
     private JTextArea a1;
+    private JTextArea a2;
     
     private String nombreC = " ";
     private String fechaC = " ";
@@ -242,17 +255,62 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         // Panel Receta
         JPanel p6 = new JPanel();
         p6.setLayout(new BorderLayout());
+        TitledBorder titulo3;
+        titulo3 = BorderFactory.createTitledBorder("Receta");
+        titulo3.setTitlePosition(TitledBorder.ABOVE_TOP);
+        p6.setBorder(titulo3);
         
         JPanel p8 = new JPanel();
         p8.setLayout(new GridBagLayout());
         GridBagConstraints g4 = new GridBagConstraints();
         
+        JLabel l12 = new JLabel("Nombre: ");
+        g4.gridx=0;
+        g4.gridy=0;
+        p8.add(l12, g4);
         
+        t2 = new JTextField(10);
+        g4.gridx=1;
+        g4.gridy=0;
+        p8.add(t2, g4);
         
-        TitledBorder titulo3;
-        titulo3 = BorderFactory.createTitledBorder("Receta");
-        titulo3.setTitlePosition(TitledBorder.ABOVE_TOP);
-        p6.setBorder(titulo3);
+        JLabel l13 = new JLabel("Cantidad: ");
+        g4.gridx=0;
+        g4.gridy=1;
+        p8.add(l13, g4);
+        
+        t3 = new JTextField(10);
+        g4.gridx=1;
+        g4.gridy=1;
+        p8.add(t3, g4);
+        
+        JLabel l14 = new JLabel("Dosificación: ");
+        g4.gridx=0;
+        g4.gridy=2;
+        p8.add(l14, g4);
+        
+        b4 = new JButton("Agregar");
+        g4.gridx=0;
+        g4.gridy=3;
+        g4.gridwidth = 2;
+        b4.addActionListener(this);
+        b4.setActionCommand("agregarR");
+        p8.add(b4, g4);
+        
+        a2 = new JTextArea();
+        a2.setLineWrap(true);
+        a2.setWrapStyleWord(true);
+        scr2 = new JScrollPane(a2);
+        g4.gridx=1;
+        g4.gridy=2;
+        g4.ipadx = 50;
+        g4.ipady = 20;
+        g4.fill = GridBagConstraints.BOTH;
+        p8.add(scr2, g4);
+        
+
+        JPanel p9 = new JPanel();
+        p9.setLayout(new BorderLayout());
         
         dt = new DefaultTableModel(new String[]{"Nombre","Cantidad","Dosificación"}, 0) {
  
@@ -273,9 +331,12 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         
         tb1 = new JTable();
         tb1.setModel(dt);
-        scr2 = new JScrollPane(tb1);
-        p6.add(scr2, BorderLayout.CENTER);
+        scr3 = new JScrollPane(tb1);
+        p9.add(scr3, BorderLayout.CENTER);
 
+        p6.add(p8, BorderLayout.NORTH);
+        p6.add(p9, BorderLayout.CENTER);
+        
         p4.add(p5, BorderLayout.NORTH);
         p4.add(p6, BorderLayout.CENTER);
         
@@ -304,6 +365,10 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         switch (comando) {
             case "buscar":
                 buscarCita();
+                break;
+                
+            case "agregar":
+                agregarReceta();
                 break;
             
             case "volver":
@@ -344,7 +409,6 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
             horaC = formato.format(cit.getCitaFecha());
             
             nombreC = cli.getPersonaNombre() +" "+ cli.getPersonaApellido();
-            
             nombreM = mas.getMascotaNombre();
             especie = mas.getEspecie().getEspecieNombre();
             raza = mas.getRaza().getRazaNombre();
@@ -357,13 +421,79 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         }   
     }
     
-    Diagnostico diag; 
+    String recetaNombre;
+    String recetaCantidad;
+    String recetaDosificacion;
+    String fechaRC;
+    Date fechaFinal;
     
-    public void agregarDiagnostico(){
-     
+    int dia;
+    int mes;
+    int anio;
+    
+    public void agregarReceta(){
+        anio = fecha.get(Calendar.YEAR);
+        mes = fecha.get(Calendar.MONTH);
+        dia = fecha.get(Calendar.DAY_OF_MONTH);
         
+        try {
+            String diaS = Integer.toString(dia);
+            String mesS = Integer.toString(mes);
+            String anioS = Integer.toString(anio);
+            fechaRC = diaS +"/"+ mesS +"/"+ anioS;
+
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            java.util.Date dateN = formato.parse(fechaRC);
+            fechaFinal = new java.sql.Date(dateN.getTime());
+
+            recetaNombre = t2.getText();
+            recetaCantidad = t3.getText();
+            recetaDosificacion = a2.getText();
+
+            Object fila[] = new Object[3];
+            fila[0] = recetaNombre;
+            fila[1] = recetaCantidad;
+            fila[2] = recetaDosificacion;
         
+        dt.addRow(fila);
+        
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+               
     }
     
+    String diagnostico;
+    Diagnostico diag; 
+    RecetaCabecera rc;
+    RecetaDetalle rd;
     
+    public void agregarDiagnostico(){
+        //Preguntar si es necesario sumarle 1 los id
+        int idDiagnostico = cd.obtenerId(con) + 1;
+        int idRecetaC = crc.obtenerId(con) + 1;
+        diagnostico = a1.getText();
+        
+        diag = new Diagnostico();
+        diag.setDiagnosticoNomEnfermedad(diagnostico);
+        diag.setEmpleado(emp);
+        cd.diaAgregar(con, diag, numeroC, emp);
+               
+        rc = new RecetaCabecera();
+        rc.setRecetaCabeceraFecha(fechaFinal);
+        crc.recCabAgregar(con, rc, idDiagnostico);
+        
+        for(int i = 0; i < tb1.getRowCount(); i++){
+            rd = new RecetaDetalle();
+            recetaNombre = (String) tb1.getValueAt(i, 0);
+            rd.setRecetaDetalleNombre(recetaNombre);
+            recetaCantidad = (String) tb1.getValueAt(i, 1);
+            rd.setRecetaDetalleCantidad(recetaCantidad);
+            recetaDosificacion = (String) tb1.getValueAt(i, 2);
+            rd.setRecetaDetalleDosificacion(recetaDosificacion);
+            
+            crd.recDetAgregar(con, rd, idRecetaC);  
+        }
+        
+    }
 }

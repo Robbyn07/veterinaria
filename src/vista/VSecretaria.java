@@ -23,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import modelo.Empleado;
 
 /**
  *
@@ -45,13 +46,14 @@ public class VSecretaria extends JFrame implements ActionListener{
     ControladorDiagnostico cd;
     ControladorRecetaCabecera crc;
     ControladorRecetaDetalle crd;
+    Empleado emp;
     
     public VSecretaria(Conexion con,ControladorCaracter cca,ControladorEmpleado cem,
             ControladorProducto cpd,ControladorCliente cc,ControladorMascota cm,
             ControladorEspecie ces,ControladorRaza cr,ControladorCita cct,
             ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
             ControladorDiagnostico cd,ControladorRecetaCabecera crc,
-            ControladorRecetaDetalle crd){
+            ControladorRecetaDetalle crd,Empleado emp){
         this.con = con;
         this.cca = cca;
         this.cem = cem;
@@ -66,6 +68,7 @@ public class VSecretaria extends JFrame implements ActionListener{
         this.cd = cd;
         this.crc = crc;
         this.crd = crd;
+        this.emp = emp;
         escritorioS = new JDesktopPane();
         initComponentes();
         ventanaSecretaria();
@@ -280,7 +283,7 @@ public class VSecretaria extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaEditarC(){
-        VCambiarContraseña vcc = new VCambiarContraseña(con,cem);
+        VCambiarContraseña vcc = new VCambiarContraseña(con,cem,emp);
         vcc.setVisible(true);
         
         escritorioS.add(vcc);

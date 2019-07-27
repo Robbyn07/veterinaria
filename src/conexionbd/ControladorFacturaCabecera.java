@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cliente;
 import modelo.FacturaCabecera;
 import modelo.FacturaDetalle;
@@ -68,7 +70,17 @@ public class ControladorFacturaCabecera {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -81,34 +93,37 @@ public class ControladorFacturaCabecera {
         try {
             sentencia = con.getConexion().prepareStatement("SELECT fac_numerof, fac_fecha, fac_subtotal, fac_iva, "
                     + "fac_descuento, fac_total, fac_metodop, fac_estado, cli_id "
-            + "FROM vet_factura_Cabeceras "
+            + "FROM veterinaria.vet_factura_Cabeceras "
             + "WHERE fac_numerof = ?");
             sentencia.setInt(1, facturaCabeceraNumero);
             resultado= sentencia.executeQuery();
             
             //Se presenta el resultado
-            while(resultado.next()){
-                int cabeceraNumero = resultado.getInt("fac_numerof");
-                facturaCabecera.setFacturaCabeceraNumero(cabeceraNumero);
-                facturaCabecera.setFacturaCabeceraFecha(resultado.getDate("fac_fecha"));
-                facturaCabecera.setFacturaCabeceraSubtotal(resultado.getDouble("fac_subtotal"));
-                facturaCabecera.setFacturaCabeceraIva(resultado.getDouble("fac_iva"));
-                facturaCabecera.setFacturaCabeceraDescuento(resultado.getDouble("fac_descuento"));
-                facturaCabecera.setFacturaCabeceraTotal(resultado.getDouble("fac_total"));
-                facturaCabecera.setFacturaCabeceraTipoPago(resultado.getString("fac_metodop"));
-                facturaCabecera.setFacturaCabeceraEstado(resultado.getString("fac_estado"));
-                
-                int clienteId = resultado.getInt("cli_id");
-                cliente = controladorCliente.cliBuscarId(con, clienteId);
-                facturaCabecera.setCliente(cliente);
-                
-                
-                
-                detalles = controladorFacturaDetalle.detObtener(con, cabeceraNumero);
-                for(int i=0; i<detalles.size();i++){
-                    facturaCabecera.addFacturasDetalle(detalles.get(i));
-                }
-                
+            if(resultado.next()==false){
+                return null;
+            }else{
+                do{
+                    int cabeceraNumero = resultado.getInt("fac_numerof");
+                    facturaCabecera.setFacturaCabeceraNumero(cabeceraNumero);
+                    facturaCabecera.setFacturaCabeceraFecha(resultado.getDate("fac_fecha"));
+                    facturaCabecera.setFacturaCabeceraSubtotal(resultado.getDouble("fac_subtotal"));
+                    facturaCabecera.setFacturaCabeceraIva(resultado.getDouble("fac_iva"));
+                    facturaCabecera.setFacturaCabeceraDescuento(resultado.getDouble("fac_descuento"));
+                    facturaCabecera.setFacturaCabeceraTotal(resultado.getDouble("fac_total"));
+                    facturaCabecera.setFacturaCabeceraTipoPago(resultado.getString("fac_metodop"));
+                    facturaCabecera.setFacturaCabeceraEstado(resultado.getString("fac_estado"));
+
+                    int clienteId = resultado.getInt("cli_id");
+                    cliente = controladorCliente.cliBuscarId(con, clienteId);
+                    facturaCabecera.setCliente(cliente);
+
+
+
+                    detalles = controladorFacturaDetalle.detObtener(con, cabeceraNumero);
+                    for(int i=0; i<detalles.size();i++){
+                        facturaCabecera.addFacturasDetalle(detalles.get(i));
+                    }
+                }while(resultado.next());
             }
             
             return facturaCabecera;
@@ -118,7 +133,17 @@ public class ControladorFacturaCabecera {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -128,14 +153,14 @@ public class ControladorFacturaCabecera {
         try {
             
             sentencia = con.getConexion().prepareStatement("SELECT max(fac_numerof) "
-            + "FROM vet_factura_Cabeceras");
+            + "FROM veterinaria.vet_factura_cabeceras");
             resultado= sentencia.executeQuery();
-
+            
             while(resultado.next()){
-                cabeceraNumero = resultado.getInt("fac_numerof");
+                cabeceraNumero = resultado.getInt("max(fac_numerof)");
 
             }
-
+            
             return cabeceraNumero;
 
         } catch (SQLException e) {
@@ -143,45 +168,68 @@ public class ControladorFacturaCabecera {
 
             return 0;
 
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
 
         
     }
     
     
     public boolean cabAgregar(Conexion con, FacturaCabecera facturaCabecera){
-        //ControladorFacturaDetalle controladorFacturaDetalle = new ControladorFacturaDetalle();
-        //ControladorFacturaCabecera controladorFacturaCabecera = new ControladorFacturaCabecera();
+        ControladorFacturaDetalle controladorFacturaDetalle = new ControladorFacturaDetalle();
+        ControladorFacturaCabecera controladorFacturaCabecera = new ControladorFacturaCabecera();
+        
         if(cabBuscar(con, facturaCabecera.getFacturaCabeceraNumero())==null){
+            System.out.println("Entra a agregar");
             
+            System.out.println("Fecha que agrega"+facturaCabecera.getFacturaCabeceraFecha());
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_factura_Cabeceras VALUES "
-                        + "(fac_numeroF_seq.nextval,?,?,?,?,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_factura_Cabeceras VALUES "
+                        + "(VETERINARIA.fac_numeroF_seq.nextval,'26/07/2019',?,?,?,?,'EFECTIVO','H',?)");
 
-                sentencia.setInt(1, facturaCabecera.getFacturaCabeceraNumero());
-                sentencia.setDate(2, (Date) facturaCabecera.getFacturaCabeceraFecha());
-                sentencia.setDouble(3, facturaCabecera.getFacturaCabeceraSubtotal());
-                sentencia.setDouble(4, facturaCabecera.getFacturaCabeceraIva());
-                sentencia.setDouble(5, facturaCabecera.getFacturaCabeceraDescuento());
-                sentencia.setDouble(6, facturaCabecera.getFacturaCabeceraTotal());
-                sentencia.setString(7, facturaCabecera.getFacturaCabeceraTipoPago());
-                sentencia.setString(8, facturaCabecera.getFacturaCabeceraEstado());
-                sentencia.setInt(9, facturaCabecera.getCliente().getClienteId());
+                //sentencia.setInt(1, facturaCabecera.getFacturaCabeceraNumero());
+                //sentencia.setDate(1, (Date)"26/07/2019");
+                sentencia.setDouble(1, facturaCabecera.getFacturaCabeceraSubtotal());
+                sentencia.setDouble(2, facturaCabecera.getFacturaCabeceraIva());
+                sentencia.setDouble(3, 0);
+                sentencia.setDouble(4, facturaCabecera.getFacturaCabeceraTotal());
+                //sentencia.setString(5, facturaCabecera.getFacturaCabeceraTipoPago());
+                //sentencia.setString(5, facturaCabecera.getFacturaCabeceraEstado());
+                sentencia.setInt(5, facturaCabecera.getCliente().getClienteId());
                 
                 sentencia.executeUpdate();
-                /*
+                
                 int cabeceraNumero=controladorFacturaCabecera.obtenerId(con);
                 
-                for(int i=0; i<facturaCabecera.getFacturasDetalle().size();i++){
-                    controladorFacturaDetalle.detAgregar(con, facturaCabecera.getFacturasDetalle().get(i), cabeceraNumero);
-                }*/
+                //for(int i=0; i<facturaCabecera.getFacturasDetalle().size();i++){
+                 //   controladorFacturaDetalle.detAgregar(con, facturaCabecera.getFacturasDetalle().get(i), cabeceraNumero);
+                //}
 
                 return true;
                 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -195,7 +243,7 @@ public class ControladorFacturaCabecera {
         if(cabBuscar(con, facturaCabecera.getFacturaCabeceraNumero())!=null){
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_factura_Cabeceras SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_factura_Cabeceras SET "
                 + "fac_estado=? "
                 + "WHERE fac_numerof=?");
 
@@ -216,6 +264,16 @@ public class ControladorFacturaCabecera {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -226,7 +284,7 @@ public class ControladorFacturaCabecera {
     public boolean cabEditarMetodoPago (Conexion con, FacturaCabecera facturaCabecera){
         try {
 
-            sentencia = con.getConexion().prepareStatement("UPDATE vet_factura_Cabeceras SET "
+            sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_factura_Cabeceras SET "
             + "fac_metodop=? "
             + "WHERE fac_numerof=?");
 
@@ -241,7 +299,17 @@ public class ControladorFacturaCabecera {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
             
         
         

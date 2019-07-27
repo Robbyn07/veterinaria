@@ -69,6 +69,7 @@ public class VMedico extends JFrame implements ActionListener{
         this.cd = cd;
         this.crc = crc;
         this.crd = crd;
+        this.emp = emp;
         escritorioM = new JDesktopPane();
         ventanaMedico ();
         initComponentes();
@@ -134,7 +135,7 @@ public class VMedico extends JFrame implements ActionListener{
             
             case "cambiarC":
                 llamarVentanaCambiarContrasena();
-                break;   
+                break;    
                 
             case "cerrarS":
                 llamarVentanaCerrarS();
@@ -169,7 +170,7 @@ public class VMedico extends JFrame implements ActionListener{
     }
     
     private void llamarVentanaCambiarContrasena(){
-        VCambiarContraseña vcc = new VCambiarContraseña(con, cem, emp);
+        VCambiarContrasena vcc = new VCambiarContrasena(con, cem, emp);
         vcc.setVisible(true);
         
         escritorioM.add(vcc);
@@ -181,8 +182,8 @@ public class VMedico extends JFrame implements ActionListener{
     }
 
     private void llamarVentanaCerrarS() {
-        VIniciarSesion vIS = new VIniciarSesion(con,cca,null,null,cpd,cc,cm,ces,cr,cct,
-                cfc,cfd,cd,crc,crd);
+        VIniciarSesion vIS = new VIniciarSesion(con,cca,null,null,cpd,cc,cm,ces,
+                cr,cct,cfc,cfd,cd,crc,crd);
         vIS.setVisible(true);
         
         this.setVisible(false);

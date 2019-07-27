@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import modelo.Empleado;
 
@@ -18,13 +19,13 @@ import modelo.Empleado;
  *
  * @author Rakrad7101
  */
-public class VCambiarContraseña extends JInternalFrame implements ActionListener{
+public class VCambiarContrasena extends JInternalFrame implements ActionListener{
     
     Conexion con;
     ControladorEmpleado cem;
     Empleado emp;
     
-    public VCambiarContraseña(Conexion con,ControladorEmpleado cem,Empleado emp){
+    public VCambiarContrasena(Conexion con,ControladorEmpleado cem,Empleado emp){
         this.con = con;
         this.cem = cem;
         this.emp = emp;
@@ -33,7 +34,7 @@ public class VCambiarContraseña extends JInternalFrame implements ActionListene
     }
     
     public void initComponentes(){
-        setSize(400,400);
+        setSize(300,300);
         setTitle("Cambiar Contraseña");
         setClosable(true);
     }
@@ -104,6 +105,17 @@ public class VCambiarContraseña extends JInternalFrame implements ActionListene
     String nuevaC;
     
     public void cambiarContraseña(){
+        contraseniaA = t1.getText();
+        nuevaC = t2.getText();
+        
+        if(emp.getEmpleadoContrasena().equals(contraseniaA)){
+            emp.setEmpleadoContrasena(nuevaC);
+            
+            cem.empEditar(con, emp);
+        }else{
+            JOptionPane.showMessageDialog(null,"Contraseña Incorrecta",
+                        "Error",JOptionPane.ERROR_MESSAGE);
+        }
         
     }
 

@@ -1,3 +1,4 @@
+
 package vista;
 
 import conexionbd.Conexion;
@@ -216,7 +217,7 @@ public class VHistorial extends JInternalFrame implements ActionListener{
             mas = listaM.get(i);
             
             if(mas.getCitas() != null){
-                listaC = (ArrayList<Cita>) mas.getCitas();
+                listaC = (ArrayList<Cita>) mas.getCitas();//mas.getCitas->lo mismo xd
                 int m = listaC.size();
 
                 for(int j = 0; j < m; j++){
@@ -247,10 +248,10 @@ public class VHistorial extends JInternalFrame implements ActionListener{
         for(int i = 0; i < tb1.getRowCount(); i++){
             if((boolean)tb1.getValueAt(i,3) == true){
                 diagnosticoID = (int) tb1.getValueAt(i, 2);
+                
                 diag = cd.diaBuscar(con, diagnosticoID);
                 llamarVentanaBusquedaHistorial(getDesktopPane());
                 break;
-                
             }
         }  
     }

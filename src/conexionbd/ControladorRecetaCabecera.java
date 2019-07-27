@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.RecetaCabecera;
 import modelo.RecetaDetalle;
 
@@ -56,7 +58,17 @@ public class ControladorRecetaCabecera {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -68,7 +80,7 @@ public class ControladorRecetaCabecera {
         
         try {
             sentencia = con.getConexion().prepareStatement("SELECT rec_id, rec_fecha "
-            + "FROM vet_receta_Cabeceras "
+            + "FROM veterinaria.vet_receta_Cabeceras "
             + "WHERE rec_id = ?");
             sentencia.setInt(1, recetaCabeceraId);
             resultado= sentencia.executeQuery();
@@ -93,7 +105,17 @@ public class ControladorRecetaCabecera {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -105,23 +127,33 @@ public class ControladorRecetaCabecera {
         if(recCabBuscarCabecera(con, recetaCabecera.getRecetaCabeceraId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_receta_Cabeceras VALUES (rec_id_seq.nextval,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_receta_Cabeceras VALUES (VETERINARIA.rec_id_seq.nextval,'26/07/2019',?)");
 
                 //sentencia.setInt(1, recetaCabecera.getRecetaCabeceraId());
-                sentencia.setDate(1, (Date) recetaCabecera.getRecetaCabeceraFecha());
-                sentencia.setInt(2, diagnosticoId);
+                //sentencia.setDate(1, (Date) recetaCabecera.getRecetaCabeceraFecha());
+                sentencia.setInt(1, diagnosticoId);
                 
                 sentencia.executeUpdate();
-                
+                /*
                 for(int i=0; i<recetaCabecera.getRecetasDetalle().size();i++){
                     controladorRecetaDetalle.recDetAgregar(con, recetaCabecera.getRecetasDetalle().get(i), recetaCabecera.getRecetaCabeceraId());
-                }
+                }*/
 
                 return true;
                 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaCabecera.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -129,16 +161,16 @@ public class ControladorRecetaCabecera {
         
     }
     
-    public int obtenerId(Conexion con){
+      public int obtenerId(Conexion con){
         int recId=0;
         
         try {          
             sentencia = con.getConexion().prepareStatement("SELECT max(rec_id) "
-            + "FROM vet_receta_Cabeceras");
+            + "FROM veterinaria.vet_receta_Cabeceras");
             resultado= sentencia.executeQuery();
 
             while(resultado.next()){
-                recId = resultado.getInt("rec_id");
+                recId = resultado.getInt("max(rec_id)");
 
             }
             return recId;
@@ -149,7 +181,6 @@ public class ControladorRecetaCabecera {
             return 0;
         } 
     }
-    
 }
 
 

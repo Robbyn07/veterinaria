@@ -21,10 +21,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.sql.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
@@ -78,7 +78,6 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         ventanaDiagnostico();
            
     }
-    
     private void initComponentes() {
         setSize(1000, 700);
         setTitle("Diagnosticos");
@@ -199,29 +198,24 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
         g2.gridwidth = 2;
         p3.add(l6, g2);
 
-        l6 = new JLabel(raza);
+        l7 = new JLabel(raza);
         g2.gridx=0;
         g2.gridy=6;
         g2.gridwidth = 2;
-        p3.add(l6, g2);
+        p3.add(l7, g2);
         
-        l7 = new JLabel(genero);
+        l8 = new JLabel(genero);
         g2.gridx=0;
         g2.gridy=7;
         g2.gridwidth = 2;
-        p3.add(l7, g2);
+        p3.add(l8, g2);
         
-        l8 = new JLabel(color);
+        l9 = new JLabel(color);
         g2.gridx=0;
         g2.gridy=8;
         g2.gridwidth = 2;
-        p3.add(l8, g2);
-
-        l9 = new JLabel(anioN);
-        g2.gridx=0;
-        g2.gridy=9;
-        g2.gridwidth = 2;
         p3.add(l9, g2);
+
         
         p1.add(p2, BorderLayout.NORTH);
         p1.add(p3, BorderLayout.CENTER);
@@ -403,18 +397,18 @@ public class VDiagnostico extends JInternalFrame implements ActionListener{
             clienteI = cm.buscarClienteId(con, mascotaI);
             cli = cc.cliBuscarId(con, clienteI);
             
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            fechaC = formato.format(cit.getCitaFecha());
-            formato = new SimpleDateFormat("HH:mm.ss");
-            horaC = formato.format(cit.getCitaFecha());
-            
             nombreC = cli.getPersonaNombre() +" "+ cli.getPersonaApellido();
+            l4.setText(nombreC);
             nombreM = mas.getMascotaNombre();
+            l5.setText(nombreM);
             especie = mas.getEspecie().getEspecieNombre();
+            l6.setText(especie);
             raza = mas.getRaza().getRazaNombre();
+            l7.setText(raza);
             genero = mas.getMascotaGenero();
+            l8.setText(genero);
             color = mas.getMascotaColor();
-            anioN = mas.getAnio().toString();
+            l9.setText(color);
                     
         } catch (NumberFormatException e) {
             e.printStackTrace();

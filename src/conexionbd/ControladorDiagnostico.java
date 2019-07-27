@@ -8,8 +8,6 @@ package conexionbd;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import modelo.Diagnostico;
 import modelo.Empleado;
 import modelo.RecetaCabecera;
@@ -45,7 +43,10 @@ public class ControladorDiagnostico {
                 diagnostico.setEmpleado(empleado);
                 
                 RecetaCabecera recetaCabecera = controladorRecetaCabecera.recCabBuscar(con, diagnosticoId);
-                diagnostico.setReceta(recetaCabecera);
+                if(recetaCabecera!=null){
+                    diagnostico.setReceta(recetaCabecera);
+                }
+                
                 
                 
             }
@@ -70,7 +71,7 @@ public class ControladorDiagnostico {
         
         try {
             sentencia = con.getConexion().prepareStatement("SELECT dia_id, dia_nomenfermedad, emp_id "
-            + "FROM vet_diagnosticos "
+            + "FROM veterinaria.vet_diagnosticos "
             + "WHERE dia_id = ?");
             sentencia.setInt(1, diagnosticoId);
             resultado= sentencia.executeQuery();
@@ -84,7 +85,10 @@ public class ControladorDiagnostico {
                 diagnostico.setEmpleado(empleado);
                 
                 RecetaCabecera recetaCabecera = controladorRecetaCabecera.recCabBuscar(con, diagnosticoId);
-                diagnostico.setReceta(recetaCabecera);
+                if(recetaCabecera!=null){
+                    diagnostico.setReceta(recetaCabecera);
+                }
+                
                 
             }
             
@@ -107,7 +111,7 @@ public class ControladorDiagnostico {
         if(diaBuscar(con, diagnostico.getDiagnosticoId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_diagnosticos VALUES (dia_id_seq.nextval,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_diagnosticos VALUES (VETERINARIA.dia_id_seq.nextval,?,?,?)");
 
                 //sentencia.setInt(1, diagnostico.getDiagnosticoId());
                 sentencia.setString(1, diagnostico.getDiagnosticoNomEnfermedad());
@@ -116,7 +120,7 @@ public class ControladorDiagnostico {
                 
                 sentencia.executeUpdate();
                 
-                controladorRecetaCabecera.recCabAgregar(con, diagnostico.getReceta(), diagnostico.getDiagnosticoId());
+                //controladorRecetaCabecera.recCabAgregar(con, diagnostico.getReceta(), diagnostico.getDiagnosticoId());
 
                 return true;
                 
@@ -134,11 +138,11 @@ public class ControladorDiagnostico {
         int diaId=0;
         try { 
             sentencia = con.getConexion().prepareStatement("SELECT max(dia_id) "
-            + "FROM vet_diagnosticos");
+            + "FROM veterinaria.vet_diagnosticos");
             resultado= sentencia.executeQuery();
 
             while(resultado.next()){
-                diaId = resultado.getInt("dia_id");
+                diaId = resultado.getInt("max(dia_id)");
 
             }
 

@@ -3,6 +3,8 @@ package conexionbd;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -35,7 +37,17 @@ public class SentenciasCRUD {
         
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SentenciasCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -57,7 +69,17 @@ public class SentenciasCRUD {
             
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SentenciasCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -80,7 +102,17 @@ public class SentenciasCRUD {
             
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(SentenciasCRUD.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     

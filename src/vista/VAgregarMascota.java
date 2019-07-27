@@ -219,12 +219,13 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
         cli = cc.cliBuscar(con, cedula);
         
         try {
-            if(cca.verificarCedula(cedula) == true){
-                
-                nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
-                telefonoC = cli.getPersonaTelefono();
-                direccionC = cli.getPersonaDireccion();
-            }
+            nombreC = cli.getPersonaNombre() + " " + cli.getPersonaApellido();
+            l2.setText(nombreC);
+            telefonoC = cli.getPersonaTelefono();
+            l3.setText(telefonoC);
+            direccionC = cli.getPersonaDireccion();
+            l4.setText(direccionC);
+
         } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null,"Verifique la cédula","Error",
                     JOptionPane.ERROR_MESSAGE);        
@@ -243,15 +244,16 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
         nombreM = t2.getText();
         especie = t3.getText();
         raza = t4.getText();
-        genero = cb1.getSelectedItem().toString();
+        if(cb1.getSelectedItem().toString().equals("Macho")){
+            genero = "M";
+        }else{
+            genero = "H";
+        }
         color = t5.getText();
         anio = yc.getYear();
         
         try {
             anioS = Integer.toString(anio);
-            SimpleDateFormat fec = new SimpleDateFormat("yyyy");
-            Date dateN = fec.parse(anioS);
-            java.sql.Date fechaN = new java.sql.Date(dateN.getTime()); 
             
             Mascota mas = new Mascota();
             Especie esp = ces.espBuscar(con, especie);
@@ -263,21 +265,20 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
                 esp = new Especie();
                 esp.setEspecieNombre(especie);
                 ces.espAgregar(con, esp);
-                esp = ces.espBuscar(con, especie);//agregado
+                esp = ces.espBuscar(con, especie);
             }
             
             if(raz == null){
                 raz = new Raza();
                 raz.setRazaNombre(raza);
                 cr.razAgregar(con, raz);
-                raz = cr.razBuscar(con, raza);//agregado
+                raz = cr.razBuscar(con, raza);
             }
             
             mas.setEspecie(esp);
             mas.setRaza(raz);
             mas.setMascotaGenero(genero);
             mas.setMascotaColor(color);
-            mas.setAnio(fechaN);
             
             if(cm.masAgregar(con, mas, cli.getClienteId())==true){
                 cli.addMascotas(mas);
@@ -287,7 +288,7 @@ public class VAgregarMascota extends JInternalFrame implements ActionListener{
                         ,"Error",JOptionPane.ERROR_MESSAGE); 
             }
             
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         

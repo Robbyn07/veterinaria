@@ -168,7 +168,7 @@ public class VAgregarCliente extends JInternalFrame implements ActionListener{
         cedula= t1.getText();
         nombre = t2.getText();
         apellido = t3.getText();
-        //try-catch para controlar si la cedula contiene caracteres? o en vez de devolver el error, devolver un false
+        
         if(cca.verificarCedula(cedula) == true){
             try {
                 if(cca.comprobarCaracteres(nombre) == true

@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cliente;
 import modelo.Mascota;
 
@@ -48,9 +50,12 @@ public class ControladorCliente {
                 cliente.setPersonaEmail(resultado.getString("cli_email"));
                 
                 mascotas = controladorMascota.masObtener(con, clienteId);
-                for(int i=0; i<mascotas.size(); i++){
-                    cliente.addMascotas(mascotas.get(i));
+                if(mascotas!=null){
+                    for(int i=0; i<mascotas.size(); i++){
+                        cliente.addMascotas(mascotas.get(i));
+                    }
                 }
+                    
                 
                 
                 clientes.add(cliente);
@@ -64,6 +69,14 @@ public class ControladorCliente {
             
             return null;
             
+        }finally{
+            if(sentencia!=null){
+                try {
+                    sentencia.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         
     }
@@ -76,31 +89,35 @@ public class ControladorCliente {
         ControladorMascota controladorMascota = new ControladorMascota();
         
         try {
-            sentencia = con.getConexion().prepareStatement("SELECT cli_id, cli_nombre, cli_apellido, cli_cedula, cli_telefono, cli_ddireccion, "
+            sentencia = con.getConexion().prepareStatement("SELECT cli_id, cli_nombre, cli_apellido, cli_cedula, cli_telefono, cli_direccion, "
                     + "cli_email "
-            + "FROM vet_clientes "
+            + "FROM VETERINARIA.vet_clientes "
             + "WHERE cli_cedula = ?");
             sentencia.setString(1, clienteCedula);
             resultado= sentencia.executeQuery();
-
-            //Se presenta el resultado
-            while(resultado.next()){
-                int clienteId = resultado.getInt("cli_id");
-                cliente.setClienteId(clienteId);
-                cliente.setPersonaNombre(resultado.getString("cli_nombre"));
-                cliente.setPersonaApellido(resultado.getString("cli_apellido"));
-                cliente.setPersonaCedula(resultado.getString("cli_cedulla"));
-                cliente.setPersonaTelefono(resultado.getString("cli_telefono"));
-                cliente.setPersonaDireccion(resultado.getString("cli_direccion"));
-                cliente.setPersonaEmail(resultado.getString("cli_email"));
+            
+            if(resultado.next()==false){
+                return null;
+            }else{
+                do{
+                    int clienteId = resultado.getInt("cli_id");
+                    cliente.setClienteId(clienteId);
+                    cliente.setPersonaNombre(resultado.getString("cli_nombre"));
+                    cliente.setPersonaApellido(resultado.getString("cli_apellido"));
+                    cliente.setPersonaCedula(resultado.getString("cli_cedula"));
+                    cliente.setPersonaTelefono(resultado.getString("cli_telefono"));
+                    cliente.setPersonaDireccion(resultado.getString("cli_direccion"));
+                    cliente.setPersonaEmail(resultado.getString("cli_email"));
                 
                 mascotas = controladorMascota.masObtener(con, clienteId);
-                for(int i=0; i<mascotas.size(); i++){
-                    cliente.addMascotas(mascotas.get(i));
+                
+                if(mascotas!=null){
+                    for(int i=0; i<mascotas.size(); i++){
+                        cliente.addMascotas(mascotas.get(i));
+                    }
                 }
-                
-                
-                
+                }while(resultado.next());
+                sentencia.close();
             }
             
             return cliente;
@@ -110,6 +127,14 @@ public class ControladorCliente {
             
             return null;
             
+        }finally{
+            if(sentencia!=null){
+                try {
+                    sentencia.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         
     }
@@ -128,8 +153,12 @@ public class ControladorCliente {
             resultado= sentencia.executeQuery();
 
             //Se presenta el resultado
-            while(resultado.next()){
-                cliente = new Cliente();
+            if(resultado.next()==false){
+                resultado.close();
+                return null;
+            }else{
+                do{
+                  cliente = new Cliente();
                 cliente.setClienteId(resultado.getInt("cli_id"));
                 cliente.setPersonaNombre(resultado.getString("cli_nombre"));
                 cliente.setPersonaApellido(resultado.getString("cli_apellido"));
@@ -138,10 +167,10 @@ public class ControladorCliente {
                 cliente.setPersonaDireccion(resultado.getString("cli_direccion"));
                 cliente.setPersonaEmail(resultado.getString("cli_email"));
                 
-                
-                
-                
+                  
+                }while(resultado.next());
             }
+            sentencia.close();
             
             return cliente;
             
@@ -150,6 +179,14 @@ public class ControladorCliente {
             
             return null;
             
+        }finally{
+            if(sentencia!=null){
+                try {
+                    sentencia.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         
     }
@@ -159,7 +196,7 @@ public class ControladorCliente {
         if(cliBuscar(con, cliente.getPersonaCedula())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_clientes VALUES (cli_id_seq.nextval,?,?,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO VETERINARIA.vet_clientes VALUES (VETERINARIA.cli_id_seq.nextval,?,?,?,?,?,?)");
 
                 //sentencia.setInt(1, cliente.getClienteId());
                 sentencia.setString(1, cliente.getPersonaCedula());
@@ -170,12 +207,23 @@ public class ControladorCliente {
                 sentencia.setString(6, cliente.getPersonaEmail());
 
                 sentencia.executeUpdate();
-
+                
+                
                 return true;
                 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            } finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -187,7 +235,7 @@ public class ControladorCliente {
         
         if(cliBuscar(con, cliente.getPersonaCedula())!=null){
             try {
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_clientes SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE VETERINARIA.vet_clientes SET "
                 + "cli_nombre=?, cli_pellido=?, cli_telefono=?, cli_direccion=?, cli_email=? "
                 + "WHERE cli_cedula=?");
 
@@ -205,6 +253,16 @@ public class ControladorCliente {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCliente.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else

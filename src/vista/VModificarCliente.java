@@ -199,7 +199,7 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
         
         try {
             if(cca.verificarCedula(cedula) == true){
-                nombre = cli.getPersonaNombre();//se puede mejorar? para no llamar otra vez al metodo: nombre=cli.getPersonaNombre()
+                nombre = cli.getPersonaNombre();
                 t2.setText(nombre);
 
                 apellido = cli.getPersonaApellido();
@@ -213,7 +213,7 @@ public class VModificarCliente extends JInternalFrame implements ActionListener{
 
                 direccion = cli.getPersonaDireccion();
                 t6.setText(direccion);  
-               
+                
             }
         } catch (HeadlessException e) {
             e.printStackTrace();

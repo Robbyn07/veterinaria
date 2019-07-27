@@ -137,7 +137,6 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 System.out.println(user);
                 System.out.println(contra);
                 
-                /*
                 //SETEA USUARIO Y CONTRASEÑA CON LOS JTEXTFIELD
                 con.setUserName(user);
                 con.setPassword(contra);
@@ -163,6 +162,8 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 //    e3.printStackTrace();
                 //    System.out.println("Esta huevada no vale");
                 //}
+                
+                
                 verificacion = cem.comprobarTipo(con, user, contra);
                 System.out.println(verificacion);
                 
@@ -173,17 +174,18 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                     
                 }else if("SECRETARIO".equals(verificacion)){
                     //System.out.println(cem.comprobarTipo(con, user, contra));
+                    comprobarTipo();
                     llamarVentanaSecretaria();
                     setVisible(false);
                 }else if("MEDICO".equals(verificacion)){
                     //System.out.println(cem.comprobarTipo(con, user, contra));
+                    comprobarTipo();
                     llamarVentanaMedico();
                     setVisible(false);
                 }else{
                     JOptionPane.showMessageDialog(null, "Error de Base");
                 }
-                */
-                
+                /*
                 user = t1.getText();
                 if(user.equals("1")){
                     llamarVentanaAdministrador();
@@ -196,7 +198,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
                 if(user.equals("3")){
                     llamarVentanaMedico();
                     setVisible(false);
-                }
+                }*/
                 break;
      
         }
@@ -206,7 +208,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     //Esperar a terminar Controlador
     Empleado emp;
     public void comprobarTipo(){
-        emp = cem.empBuscarUsername(con, user);
+         emp = cem.empBuscarUsername(con, user);
     }
     
     public void llamarVentanaAdministrador(){
@@ -215,8 +217,7 @@ public class VIniciarSesion extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaSecretaria(){
-        VSecretaria vS = new VSecretaria(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,
-                cd,crc,crd,emp);
+        VSecretaria vS = new VSecretaria(con,cca,cem,cpd,cc,cm,ces,cr,cct,cfc,cfd,cd,crc,crd,emp);
         vS.setVisible(true); 
     }
     

@@ -9,10 +9,14 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
 import javax.swing.JInternalFrame;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import modelo.Cliente;
 import modelo.Diagnostico;
+import modelo.RecetaCabecera;
+import modelo.RecetaDetalle;
 
 /**
  *
@@ -31,7 +35,6 @@ public class VBusquedaHistorial extends JInternalFrame implements ActionListener
         initComponentes();
         ventanaBusquedaHistorial();  
     }
-    
     
     public void initComponentes(){
         setSize(500,500);
@@ -67,6 +70,8 @@ public class VBusquedaHistorial extends JInternalFrame implements ActionListener
         GridBagConstraints gbDiagnostico = new GridBagConstraints();
 
         a1= new JTextArea(20,20);
+        a1.setLineWrap(true);
+        a1.setWrapStyleWord(true);
         gbDiagnostico.gridx=0;
         gbDiagnostico.gridy=0;
         gbDiagnostico.ipadx=200;
@@ -91,6 +96,8 @@ public class VBusquedaHistorial extends JInternalFrame implements ActionListener
         GridBagConstraints gbReceta = new GridBagConstraints();
 
         a2= new JTextArea(20,20);
+        a2.setLineWrap(true);
+        a2.setWrapStyleWord(true);
         gbReceta.gridx=1;
         gbReceta.gridy=0;
         gbReceta.ipadx=200;
@@ -149,8 +156,26 @@ public class VBusquedaHistorial extends JInternalFrame implements ActionListener
                 }
     }
     
+    RecetaCabecera rc;
+    
+    
     public void mostrarHistorial(){
         a1.append(diag.getDiagnosticoNomEnfermedad());
+        
+        rc = diag.getReceta();
+        ArrayList<RecetaDetalle> lista = (ArrayList<RecetaDetalle>) rc.getRecetasDetalle();
+        
+        int n = lista.size();
+        
+        if(rc.getRecetasDetalle() != null){
+            for(int i = 0; i < n; i++){
+                a2.append("Nombre: " + lista.get(i).getRecetaDetalleNombre() + 
+                        "Cantidad: " + lista.get(i).getRecetaDetalleCantidad()+ 
+                        "Dosificación: " + lista.get(i).getRecetaDetalleDosificacion()+ "\n");
+            }
+            
+        }
+        
     }
 
     private void llamarVentanaHistorial(JDesktopPane escritorioM) {

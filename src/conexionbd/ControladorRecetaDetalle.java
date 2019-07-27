@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.RecetaDetalle;
 
 /**
@@ -50,7 +52,17 @@ public class ControladorRecetaDetalle {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -60,7 +72,7 @@ public class ControladorRecetaDetalle {
         
         try {
             sentencia = con.getConexion().prepareStatement("SELECT rde_id, rde_nombre, rde_cantidad, rde_dosificacion "
-            + "FROM vet_receta_Detalles "
+            + "FROM VETERINARIA.vet_receta_Detalles "
             + "WHERE rde_id = ?");
             sentencia.setInt(1, recetaDetalleId);
             resultado= sentencia.executeQuery();
@@ -80,7 +92,17 @@ public class ControladorRecetaDetalle {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
 
@@ -89,7 +111,7 @@ public class ControladorRecetaDetalle {
         if(recDetBuscar(con, recetaDetalle.getRecetaDetalleId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_receta_Detalles VALUES (rde_id_seq.nextval,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO VETERINARIA.vet_receta_Detalles VALUES (VETERINARIA.rde_id_seq.nextval,?,?,?,?)");
 
                 //sentencia.setInt(1, recetaDetalle.getRecetaDetalleId());
                 sentencia.setString(1, recetaDetalle.getRecetaDetalleNombre());
@@ -104,6 +126,16 @@ public class ControladorRecetaDetalle {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorRecetaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else

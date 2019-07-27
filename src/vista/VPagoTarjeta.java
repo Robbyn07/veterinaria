@@ -105,6 +105,9 @@ public class VPagoTarjeta extends JInternalFrame implements ActionListener{
             
             case "pagar":
                 JOptionPane.showMessageDialog(null, "Pago Exitoso");
+                VRealizarFactura vrf = new VRealizarFactura(null,null,null,null,
+                        null,null);
+                //vrf.imprimirFactura();
                 setVisible(false);
                 break;    
 

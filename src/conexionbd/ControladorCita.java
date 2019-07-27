@@ -1,14 +1,24 @@
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package conexionbd;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cita;
 import modelo.Diagnostico;
+import modelo.Mascota;
 
 /**
  *
@@ -19,7 +29,12 @@ public class ControladorCita {
     private ResultSet resultado = null;
     private PreparedStatement sentencia = null;
     
-    
+    /**
+     * OBTIENE LISTA DE CITAS DE LA MASCOTA
+     * @param con
+     * @param mascotaId
+     * @return 
+     */
     public List<Cita> citObtenerMascota(Conexion con, int mascotaId){
         
         List<Cita> citas = new ArrayList<>();
@@ -40,14 +55,9 @@ public class ControladorCita {
                 cita.setCitaId(citaId);
                 cita.setCitaFecha(resultado.getDate("cit_fecha"));
                 
-                diagnosticos = controladorDiagnostico.diaObtener(con, citaId);
-                
-                cita.setDiagnostico(diagnosticos);
-                
                 citas.add(cita);
                 
             }
-            
             return citas;
             
         } catch (SQLException e) {
@@ -55,35 +65,50 @@ public class ControladorCita {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
     public List<Cita> citObtenerGeneral(Conexion con){
-        Cita cita = new Cita();
-        List<Cita> citas = new ArrayList<>();
-        Diagnostico diagnostico;
-        ControladorDiagnostico controladorDiagnostico = new ControladorDiagnostico();
         
+        List<Cita> citas = new ArrayList<>();
+        ControladorMascota cm = new ControladorMascota();
         try {
-            sentencia = con.getConexion().prepareStatement("SELECT cit_id, cit_fecha "
-            + "FROM vet_citas "
+            sentencia = con.getConexion().prepareStatement("SELECT cit_id, cit_fecha, MAS_ID "
+            + "FROM veterinaria.vet_citas "
             + "ORDER BY cit_fecha");
             resultado= sentencia.executeQuery();
 
-            //Se presenta el resultado
-            while(resultado.next()){
-                int citaId = resultado.getInt("cit_id");
-                cita.setCitaId(citaId);
-                cita.setCitaFecha(resultado.getDate("cit_fecha"));
-                
-                diagnostico = controladorDiagnostico.diaObtener(con, citaId);
-                
-                    cita.setDiagnostico(diagnostico);
-                
-                citas.add(cita);
-                
+            if(resultado.next()==false){
+                return null;
+            }else{
+                do{
+                    Cita cita = new Cita();
+                    int citaId = resultado.getInt("cit_id");
+                    cita.setCitaId(citaId);
+                    SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    java.util.Date ts = resultado.getTimestamp("cit_fecha");
+                    //String dddd= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm").format(ts);
+                    //Date date = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dddd);
+                    cita.setCitaFecha(ts);
+                    //System.out.println(cita.getCitaFecha());
+                    cita.setMascota(cm.masBuscar(con, resultado.getInt("MAS_ID")));
+
+                    citas.add(cita);
+                }while(resultado.next());
+               
             }
+            //Se presenta el resultado
             
             return citas;
             
@@ -92,31 +117,38 @@ public class ControladorCita {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+        
     }
-    
     
     public Cita citBuscar(Conexion con, int citaId){
         Cita cita = new Cita();
-        Diagnostico diagnostico;
-        ControladorDiagnostico controladorDiagnostico = new ControladorDiagnostico();
-        
+       
         try {
             sentencia = con.getConexion().prepareStatement("SELECT cit_id, cit_fecha "
-            + "FROM vet_citas "
+            + "FROM VETERINARIA.vet_citas "
             + "WHERE cit_id = ?");
             sentencia.setInt(1, citaId);
             resultado= sentencia.executeQuery();
 
-            //Se presenta el resultado
-            while(resultado.next()){
-                cita.setCitaId(resultado.getInt("cit_id"));
-                cita.setCitaFecha(resultado.getDate("cit_fecha"));
-                
-                diagnostico = controladorDiagnostico.diaObtener(con, citaId);
-                
-                    cita.setDiagnostico(diagnostico);
-
+            if(resultado.next()==false){
+                return null;
+            }else{
+                do{
+                    cita.setCitaId(resultado.getInt("cit_id"));
+                    cita.setCitaFecha(resultado.getDate("cit_fecha"));
+                }while(resultado.next());
+               
             }
             
             return cita;
@@ -126,28 +158,51 @@ public class ControladorCita {
             
             return null;
             
-        } 
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+        
     }
     
     
-    public boolean citAgregar(Conexion con, Cita cita, int mascotaId){
+    public boolean citAgregar(Conexion con, Cita cita){
         
         if(citBuscar(con, cita.getCitaId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_citas VALUES (cit_id_seq.nextval,?,?)");
+                sentencia = con.getConexion().prepareStatement(
+                "INSERT INTO veterinaria.vet_citas VALUES (veterinaria.cit_id_seq.nextval,?,?)");
 
                 //sentencia.setInt(1, cita.getCitaId());
-                sentencia.setDate(1, (Date) cita.getCitaFecha());
-                sentencia.setInt(2, mascotaId);
+                sentencia.setTimestamp(1, new Timestamp(cita.getCitaFecha().getTime()));
+                sentencia.setInt(2, cita.getMascota().getMascotaId());
 
                 sentencia.executeUpdate();
-
+                
+                
                 return true;
                 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -155,50 +210,38 @@ public class ControladorCita {
         
     }
     
-    public boolean citEditar(Conexion con, Cita cita, int mascotaId){
-        
-        if(citBuscar(con, cita.getCitaId())!=null){
+    public boolean citEditar(Conexion con, Cita cita){
+        cita =citBuscar2(con, cita);
+        if(cita!=null){
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_citas SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_citas SET "
                 + "cit_id=?, cit_fecha=?, mas_id=? "
                 + "WHERE cit_id=?");
 
                 sentencia.setInt(1, cita.getCitaId());
-                sentencia.setDate(2, (Date) cita.getCitaFecha());
-                sentencia.setInt(4, mascotaId);
+                sentencia.setTimestamp(2, new Timestamp(cita.getCitaFecha().getTime()));
+                sentencia.setInt(4, cita.getMascota().getMascotaId());
                 sentencia.setInt(5, cita.getCitaId());
 
                 sentencia.executeUpdate();
-
+                
+                
                 return true;
                 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
-            }
-            
-        } else
-            return false;
-        
-    }
-    //metodo agregado
-    public boolean citEliminar(Conexion con, int id){
-        
-        if(citBuscar(con, id)!=null){
-            try {
+            }finally{
                 
-                sentencia = con.getConexion().prepareStatement("DELETE FROM vet_citas  "
-                + "WHERE cit_id=?");
-
-                sentencia.setInt(1, id);
-                sentencia.executeUpdate();
-
-                return true;
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
                 
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
             }
             
         } else
@@ -212,7 +255,7 @@ public class ControladorCita {
         int masId=0;
         try {
             sentencia = con.getConexion().prepareStatement("SELECT mas_id "
-            + "FROM vet_citas "
+            + "FROM VETERINARIA.vet_citas "
             + "WHERE cit_id = ?");
             sentencia.setInt(1, citaId);
             resultado= sentencia.executeQuery();
@@ -231,10 +274,92 @@ public class ControladorCita {
             
             return 0;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
+    public Cita citBuscar2(Conexion con, Cita cita){
+        
+       
+        try {
+            sentencia = con.getConexion().prepareStatement("SELECT cit_id "
+            + "FROM VETERINARIA.vet_citas "
+            + "WHERE cit_fecha = ? "
+            + "AND MAS_ID = ? ");
+            sentencia.setTimestamp(1, new Timestamp(cita.getCitaFecha().getTime()));
+            sentencia.setInt(2, cita.getMascota().getMascotaId());
+            resultado= sentencia.executeQuery();
+
+            if(resultado.next()==false){
+                return null;
+            }else{
+                do{
+                    cita.setCitaId(resultado.getInt("cit_id"));
+                }while(resultado.next());
+               
+            }
+            
+            return cita;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            
+            return null;
+            
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+        
+    }
+    public boolean citEliminar(Conexion con, Cita cita){
+        cita=this.citBuscar2(con, cita);
+        if(citBuscar(con, cita.getCitaId())!=null){
+            try {
+                
+                sentencia = con.getConexion().prepareStatement(
+                 "DELETE FROM veterinaria.vet_citas  "
+                + "WHERE cit_id=?");
+
+                sentencia.setInt(1, cita.getCitaId());
+                sentencia.executeUpdate();
+
+                return true;
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }finally{
+                if(sentencia!=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorCita.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            
+        } else
+            return false;
+        
+    }
     
 }
 

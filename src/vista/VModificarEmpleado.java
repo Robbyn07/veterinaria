@@ -117,7 +117,7 @@ public class VModificarEmpleado extends JInternalFrame implements ActionListener
         
         cb1 = new JComboBox<>();
             cb1.addItem("Secretario");
-            cb1.addItem("Médico");
+            cb1.addItem("Medico");
         g1.gridx =1;
         g1.gridy =4;
         cp.add(cb1, g1);
@@ -257,7 +257,7 @@ public class VModificarEmpleado extends JInternalFrame implements ActionListener
         nombre = t2.getText();
         apellido = t3.getText();
         telefono = t4.getText();
-        cargo = cb1.getSelectedItem().toString();
+        cargo = cb1.getSelectedItem().toString().toUpperCase();
         email = t5.getText();
         direccion = t6.getText();
         
@@ -270,10 +270,10 @@ public class VModificarEmpleado extends JInternalFrame implements ActionListener
         emp.setPersonaEmail(email);
         emp.setPersonaDireccion(direccion);
         
-        int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(null,"Confirmacion",
+                "Desea Confirmar la acción?",JOptionPane.YES_NO_OPTION);
         
-        if(res == 0){
+        if(res == JOptionPane.YES_OPTION){
             if(cem.empEditar(con, emp) == true){
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
             }else{
@@ -292,10 +292,10 @@ public class VModificarEmpleado extends JInternalFrame implements ActionListener
         emp = cem.empBuscar(con, cedula);
         emp.setEmpleadoEstado("I");
         
-        int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+        int res = JOptionPane.showConfirmDialog(null,"CONFIRMACION",
+                "Desea confirmar la accion?",JOptionPane.YES_NO_OPTION);
         
-        if(res == 0){
+        if(res==JOptionPane.YES_OPTION){
             if(cem.cancelarEmpleado(con, emp) == true){
                 JOptionPane.showMessageDialog(null, "Operación Exitosa");
             }else{

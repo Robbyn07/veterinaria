@@ -12,6 +12,7 @@ public class Cita {
     private Date citaFecha;
     private String citaEstado;
     private Diagnostico diagnostico;
+    private Mascota mascota;
 
     
     public int getCitaId() {
@@ -44,6 +45,14 @@ public class Cita {
 
     public void setDiagnostico(Diagnostico diagnostico) {
         this.diagnostico = diagnostico;
+    }
+    
+     public Mascota getMascota() {
+        return mascota;
+    }
+
+    public void setMascota(Mascota mascota) {
+        this.mascota = mascota;
     }
 
 

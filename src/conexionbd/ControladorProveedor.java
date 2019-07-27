@@ -8,11 +8,13 @@ package conexionbd;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Proveedor;
 
 /**
  *
- * @author plojam
+ * @author plojam 
  */
 public class ControladorProveedor {
     
@@ -52,7 +54,17 @@ public class ControladorProveedor {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
        
     }
     
@@ -83,7 +95,17 @@ public class ControladorProveedor {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
             
@@ -119,7 +141,17 @@ public class ControladorProveedor {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
        
     }
     
@@ -146,6 +178,16 @@ public class ControladorProveedor {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -174,6 +216,16 @@ public class ControladorProveedor {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -199,6 +251,16 @@ public class ControladorProveedor {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProveedor.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
     }

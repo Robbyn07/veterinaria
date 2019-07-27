@@ -29,9 +29,6 @@ public class ControladorEmpleado {
     public Empleado empBuscar(Conexion con, String cedula){
         Empleado empleado = new Empleado();
         
-        /*
-        HAY QUE HACER DISPARADOR PARA INGRESO DE USUARIOS
-        */
         try {
             sentencia = con.getConexion().prepareStatement("SELECT emp_id, emp_nombre, emp_apellido, emp_cedula, emp_telefono, "
                     + "emp_direccion, emp_email, emp_cargo, emp_username, emp_contrasena "
@@ -64,7 +61,17 @@ public class ControladorEmpleado {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -101,7 +108,17 @@ public class ControladorEmpleado {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -139,7 +156,17 @@ public class ControladorEmpleado {
             e.printStackTrace();
             
             return null;            
-        }        
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }        
     }
     
     
@@ -149,8 +176,8 @@ public class ControladorEmpleado {
         if(empBuscar(con, empleado.getPersonaCedula())==null){
             try {
 
-                if(creacionEmpleado(con, empleado)){
-                    sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_empleados VALUES (emp_id_seq.nextval,?,?,?,?,?,?,?,?,?,?)");
+               
+                    sentencia = con.getConexion().prepareStatement("INSERT INTO veterinaria.vet_empleados VALUES (VETERINARIA.emp_id_seq.nextval,?,?,?,?,?,?,?,?,?,?)");
 
                     //sentencia.setInt(1, empleado.getEmpleadoId());
                     sentencia.setString(1, empleado.getPersonaCedula());
@@ -168,14 +195,22 @@ public class ControladorEmpleado {
 
                     return true;
                 
-                }else{
-                    return false;
-                }
+               
                 
 
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -185,37 +220,17 @@ public class ControladorEmpleado {
     
     public boolean empEditar(Conexion con, Empleado empleado){
         
-        /*if(empBuscar(con, empleado.getPersonaCedula())!=null){
-            try {
-                
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_empleados SET "
-                + "emp_telefono=?, emp_direccion=?, emp_email=?, emp_permiso=? "
-                + "WHERE emp_cedula=?");
-
-                sentencia.setString(1, empleado.getPersonaTelefono());
-                sentencia.setString(2, empleado.getPersonaDireccion());
-                sentencia.setString(3, empleado.getPersonaEmail());
-                sentencia.setString(4, empleado.getEmpleadoPermiso());
-                sentencia.setString(5, empleado.getPersonaCedula());
-
-                sentencia.executeUpdate();
-
-                return true;
-                
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-            
-        } else
-            return false;*/
-        
+        Empleado empleado2=empBuscar(con, empleado.getPersonaCedula());
+        empleado.setEmpleadoUsername(empleado2.getEmpleadoUsername());
+        empleado.setEmpleadoContrasena(empleado2.getEmpleadoContrasena());
+        //empleado.set
         
         if(empBuscar(con, empleado.getPersonaCedula())!=null){
+            System.out.println("Entra a esta huevada de mierda");
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_empleados SET "
-                + "emp_telefono=?, emp_direccion=?, emp_email=?, emp_permiso=?, emp_username=?, emp_contrasena=? "
+                sentencia = con.getConexion().prepareStatement("UPDATE veterinaria.vet_empleados SET "
+                + "emp_telefono=?, emp_direccion=?, emp_email=?, emp_cargo=?, emp_username=?, emp_contrasena=? "
                 + "WHERE emp_cedula=?");
 
                 sentencia.setString(1, empleado.getPersonaTelefono());
@@ -224,7 +239,8 @@ public class ControladorEmpleado {
                 sentencia.setString(4, empleado.getEmpleadoPermiso());
                 sentencia.setString(5, empleado.getPersonaCedula());
                 sentencia.setString(5, empleado.getEmpleadoUsername());
-                sentencia.setString(5, empleado.getEmpleadoContrasena());
+                sentencia.setString(6, empleado.getEmpleadoContrasena());
+                sentencia.setString(7, empleado.getPersonaCedula());
 
                 sentencia.executeUpdate();
 
@@ -233,6 +249,16 @@ public class ControladorEmpleado {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -281,7 +307,17 @@ public class ControladorEmpleado {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -310,7 +346,7 @@ public class ControladorEmpleado {
         if(empBuscar(con, empleado.getPersonaCedula())!=null){
             try {
                 
-                sentencia = con.getConexion().prepareStatement("UPDATE vet_empleados SET "
+                sentencia = con.getConexion().prepareStatement("UPDATE VETERINARIA.vet_empleados SET "
                 + "emp_estado=? "
                 + "WHERE emp_cedula=?");
 
@@ -324,6 +360,16 @@ public class ControladorEmpleado {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -338,7 +384,7 @@ public class ControladorEmpleado {
         try {
             sentencia = con.getConexion().prepareStatement("SELECT emp_id, emp_nombre, emp_apellido, emp_cedula, emp_telefono, "
                     + "emp_direccion, emp_email, emp_cargo, emp_username, emp_contrasena "
-                    + "FROM vet_empleados "
+                    + "FROM VETERINARIA.vet_empleados "
                     + "WHERE emp_username = ?");
             sentencia.setString(1, username);
             resultado= sentencia.executeQuery();
@@ -364,13 +410,24 @@ public class ControladorEmpleado {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
      public boolean creacionEmpleado(Conexion con, Empleado empleado){
         
         try {
+            System.out.println("manda a crear usuario empleado");
             sentencia = con.getConexion().prepareStatement("CREATE USER ? "
                     + "IDENTIFIED BY ? "
                     + "GRANT EMPLEADOS TO ?");
@@ -379,12 +436,22 @@ public class ControladorEmpleado {
                 sentencia.setString(2, empleado.getEmpleadoContrasena());
                 sentencia.setString(3, empleado.getEmpleadoUsername());
                 
-                sentencia.executeUpdate();
+                 sentencia.executeUpdate();
                 
                  } catch (SQLException ex) {
             Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
             return false;
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorEmpleado.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         return true;
     }
 

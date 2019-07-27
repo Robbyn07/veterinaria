@@ -53,7 +53,7 @@ public class VSecretaria extends JFrame implements ActionListener{
             ControladorEspecie ces,ControladorRaza cr,ControladorCita cct,
             ControladorFacturaCabecera cfc,ControladorFacturaDetalle cfd,
             ControladorDiagnostico cd,ControladorRecetaCabecera crc,
-            ControladorRecetaDetalle crd,Empleado emp){
+            ControladorRecetaDetalle crd, Empleado emp){
         this.con = con;
         this.cca = cca;
         this.cem = cem;
@@ -68,7 +68,7 @@ public class VSecretaria extends JFrame implements ActionListener{
         this.cd = cd;
         this.crc = crc;
         this.crd = crd;
-        this.emp = emp;
+        this.emp=emp;
         escritorioS = new JDesktopPane();
         initComponentes();
         ventanaSecretaria();
@@ -148,7 +148,7 @@ public class VSecretaria extends JFrame implements ActionListener{
    
         barra.add(m3);
        
-        JMenu m4 = new JMenu("cuenta");
+        JMenu m4 = new JMenu("Cuenta");
             //Ingresar items en la opción
             JMenuItem i10 = new JMenuItem("Cambiar Contraseña");
             i10.addActionListener(this);
@@ -283,7 +283,7 @@ public class VSecretaria extends JFrame implements ActionListener{
     }
     
     public void llamarVentanaEditarC(){
-        VCambiarContraseña vcc = new VCambiarContraseña(con,cem,emp);
+        VCambiarContrasena vcc = new VCambiarContrasena(con,cem,emp);
         vcc.setVisible(true);
         
         escritorioS.add(vcc);

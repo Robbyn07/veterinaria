@@ -10,7 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Producto;
+import modelo.Proveedor;
 
 /**
  *
@@ -49,7 +52,11 @@ public class ControladorProducto {
                     producto.setProductoOrigen(resultado.getString("pro_origen"));
                     producto.setProductoAlianza(resultado.getString("pro_alianza"));
                     int proveedorId = resultado.getInt("prv_id");
-                    producto.setProveedor(proveedor.pvdBuscarId(con, proveedorId));
+                    Proveedor prov = proveedor.pvdBuscarId(con, proveedorId);
+                    if(prov!=null){
+                        producto.setProveedor(prov);
+                    }
+                    
                 }while(resultado.next());
             }
             
@@ -60,7 +67,17 @@ public class ControladorProducto {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -87,7 +104,10 @@ public class ControladorProducto {
                 producto.setProductoOrigen(resultado.getString("pro_origen"));
                 producto.setProductoAlianza(resultado.getString("pro_alianza"));
                 int proveedorId = resultado.getInt("pRV_id");
-                producto.setProveedor(proveedor.pvdBuscarId(con, proveedorId));
+                Proveedor prov = proveedor.pvdBuscarId(con, proveedorId);
+                if(prov!=null){
+                    producto.setProveedor(prov);
+                }
             }
             
             return producto;
@@ -97,7 +117,17 @@ public class ControladorProducto {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -126,7 +156,10 @@ public class ControladorProducto {
                 producto.setProductoOrigen(resultado.getString("PRO_ORIGEN"));
                 producto.setProductoAlianza(resultado.getString("PRO_ALIANZA"));
                 int proveedorId = resultado.getInt("PRV_ID");
-                producto.setProveedor(proveedor.pvdBuscarId(con, proveedorId));
+                Proveedor prov = proveedor.pvdBuscarId(con, proveedorId);
+                if(prov!=null){
+                    producto.setProveedor(prov);
+                }
                 
                 productos.add(producto);
             }
@@ -138,7 +171,17 @@ public class ControladorProducto {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -174,6 +217,16 @@ public class ControladorProducto {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else
@@ -202,18 +255,62 @@ public class ControladorProducto {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
         
     }
+    
+    
+    public boolean stock(Conexion con, int id, int stock){
+        
+        
+            try {
+                
+                sentencia = con.getConexion().prepareStatement("UPDATE VETERINARIA.vet_productos SET "
+                + "pro_stock=? "
+                + "WHERE pro_id=?");
+
+                sentencia.setDouble(1, stock);
+                sentencia.setDouble(2, id);
+
+                sentencia.executeUpdate();
+
+                return true;
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
+        
+    }
+    
     
     public boolean agregarStock(Conexion con, Producto producto, int cantidad){
         
         int stock = producto.getProductoStock();
         stock = stock+cantidad;
+        int id = producto.getProductoId();
         
-        producto.setProductoStock(stock);
-        
-        proEditar(con, producto);
+        stock(con, id, stock);
         
         return true;
         
@@ -223,10 +320,9 @@ public class ControladorProducto {
         
         int stock = producto.getProductoStock();
         stock = stock-cantidad;
+        int id= producto.getProductoId();
         
-        producto.setProductoStock(stock);
-        
-        proEditar(con, producto);
+        stock(con, id, stock);
         
         return true;
         
@@ -274,6 +370,16 @@ public class ControladorProducto {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorProducto.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
     }

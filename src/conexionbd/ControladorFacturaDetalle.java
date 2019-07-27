@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.FacturaDetalle;
 import modelo.Producto;
 
@@ -57,7 +59,17 @@ public class ControladorFacturaDetalle {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
 
@@ -94,7 +106,17 @@ public class ControladorFacturaDetalle {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -105,7 +127,7 @@ public class ControladorFacturaDetalle {
         try {
             sentencia = con.getConexion().prepareStatement("SELECT fde_id, fde_cantidad, fde_preciou, fde_subtotal, "
                     + "fde_id "
-            + "FROM vet_factura_Detalles "
+            + "FROM VETERINARIA.vet_factura_Detalles "
             + "WHERE fde_id = ?");
             sentencia.setInt(1, facturaDetalleId);
             resultado= sentencia.executeQuery();
@@ -127,7 +149,17 @@ public class ControladorFacturaDetalle {
             
             return null;
             
-        }
+        }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
+            }
         
     }
     
@@ -136,8 +168,8 @@ public class ControladorFacturaDetalle {
         if(detBuscar(con, facturaDetalle.getFacturaDetalleId())==null){
             try {
 
-                sentencia = con.getConexion().prepareStatement("INSERT INTO vet_factura_Detalles "
-                        + "VALUES (fde_id_seq.nextval,?,?,?,?,?)");
+                sentencia = con.getConexion().prepareStatement("INSERT INTO VETERINARIA.vet_factura_Detalles "
+                        + "VALUES (VETERINARIA.fde_id_seq.nextval,?,?,?,?,?)");
 
                 //sentencia.setInt(1, facturaDetalle.getFacturaDetalleId());
                 sentencia.setInt(1, facturaDetalle.getFacturaDetalleCantidad());
@@ -155,6 +187,16 @@ public class ControladorFacturaDetalle {
             } catch (SQLException e) {
                 e.printStackTrace();
                 return false;
+            }finally{
+                
+                if(sentencia !=null){
+                    try {
+                        sentencia.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(ControladorFacturaDetalle.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                
             }
             
         } else

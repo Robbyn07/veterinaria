@@ -26,6 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -261,7 +262,6 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         p4.add(scr, BorderLayout.NORTH);
         
         JPanel p5 = new JPanel(); 
-        GridBagConstraints g3 = new GridBagConstraints(); 
         p5.setLayout(new FlowLayout());
         
         JLabel l14 = new JLabel("Subtotal:");
@@ -276,13 +276,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         
         t5 = new JTextField(6);
         t5.setEditable(false);
-        p5.add(t5);
-        
-        JLabel l16 = new JLabel("Descuento:");
-        p5.add(l16);
-        
-        t6 = new JTextField(6);
-        p5.add(t6);
+        p5.add(t5);        
         
         JLabel l17 = new JLabel("Total:");
         p5.add(l17);
@@ -370,12 +364,17 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             if(cca.verificarCedula(cedula) == true){
                 if(cli.getPersonaCedula().equals(cedula)){
                             
-                    nombre = cli.getPersonaNombre();
-                    apellido = cli.getPersonaApellido();
-
+                    nombre = cli.getPersonaNombre() +" "+ cli.getPersonaApellido();
+                    l7.setText(nombre);
+                    System.out.println(nombre);
+                    
                     telefono = cli.getPersonaTelefono();
-
+                    l9.setText(telefono);
+                     System.out.println(telefono);
+                     
                     direccion = cli.getPersonaDireccion();
+                     System.out.println(direccion);
+                     l11.setText(direccion);
                     
                     auto();
                     this.updateUI();
@@ -410,6 +409,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     Producto pro;
     FacturaDetalle fd;
     
+    DecimalFormat df;
     public void agregarProducto(){
         fd = new FacturaDetalle();
         producto = t2.getText();
@@ -418,7 +418,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
         pro = cpd.proBuscar(con, producto);
         
         if(pro != null){
-            if(cantidad == 0){//menor o igual?
+            if(cantidad == 0){
                 JOptionPane.showMessageDialog(null,"Ingrese una cantidad válida",
                         "Error",JOptionPane.ERROR_MESSAGE);
             }else{
@@ -426,15 +426,15 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                     JOptionPane.showMessageDialog(null,"Revise el stock del producto",
                         "Error",JOptionPane.ERROR_MESSAGE);
                 }else{
-                    //agregado
-                    precioU = pro.getProductoPrecioVenta();
-                    //hasta aqui 
                     Object fila[] = new Object[4];
                     fila[0] = pro.getProductoNombre();
                     fila[1] = cantidad;
+                    precioU = pro.getProductoPrecioVenta();
                     fila[2] = precioU;
-
+                    
                     subtotalD = cantidad * precioU;
+                    
+                    
                     fila[3] = subtotalD; 
 
                     dt.addRow(fila);
@@ -449,6 +449,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     }
     
     private double subtotalC = 0;
+    private String test2;
     private double test;
     private double iva;
     private double descuento;
@@ -457,21 +458,27 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
     
     public void completarCabecera(){
         for(int i = 0; i < tb1.getRowCount(); i++){
+            
             test = (double) tb1.getValueAt(i, 3);
             test = subtotalC + test;
             subtotalC = test;
             
             try {
+                
                 t4.setText(Double.toString(subtotalC));
-               
-                iva = subtotalC * 0.12;
+                double d=(subtotalC * 0.12)*100;
+                int s = (int)d;
+                iva = (s/100);
                 t5.setText(Double.toString(iva));
                 
-                descuento = Double.parseDouble(t6.getText()); 
-                      
-                totalC = subtotalC + iva - descuento;
+                //descuento = Double.parseDouble(t6.getText());
+                double d2=(subtotalC + iva)*100;
+                int s2=(int)d2;
+                totalC = s2/100;
                 t7.setText(Double.toString(totalC));
 
+                
+                
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
@@ -488,22 +495,26 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             String anioS = Integer.toString(anio);
             fechaFC = diaS +"/"+ mesS +"/"+ anioS;
             
+            
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            Date dateN = formato.parse(fechaFC);
-            java.sql.Date fechaFinal = new java.sql.Date(dateN.getTime()); 
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.YEAR, anio);
+            cal.set(Calendar.MONTH, mes);
+            cal.set(Calendar.DAY_OF_MONTH, dia);
+            //Date dateN = formato.parse(fechaFC);
+            java.sql.Date fechaFinal = new java.sql.Date(cal.getTimeInMillis()); 
                     
             FacturaCabecera fc = new FacturaCabecera();
             fc.setFacturaCabeceraFecha(fechaFinal);
             fc.setCliente(cli);
+            //System.out.println(""+cli.getClienteId());
             fc.setFacturaCabeceraSubtotal(subtotalC);
             fc.setFacturaCabeceraIva(iva);
             fc.setFacturaCabeceraDescuento(descuento);
             fc.setFacturaCabeceraTotal(totalC);
-            //se agrega antes para que al momento de  que el detalle se agregue, tenga la foreing key de la cabecera
-            cfc.cabAgregar(con, fc);
+            cfc.cabAgregar(con, fc);  
             
-
-            int idFC = Integer.parseInt(ids);//para esto, ids debe ser seteado en la ventana, lo cual creo que no esta aun, porque siempre se inicia con 13
+            int idFC = Integer.parseInt(ids);
             
             for(int i = 0; i < tb1.getRowCount(); i++){
                 pro = cpd.proBuscar(con, (String) tb1.getValueAt(i,0));
@@ -519,7 +530,6 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 fc.addFacturasDetalle(fd);
             }
             
-            //cfc.cabAgregar(con, fc);
             
             Object[] options = {"Efectivo",
                                 "Tarjeta"};
@@ -532,14 +542,14 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
             if(n == 0){
                 fc.setFacturaCabeceraTipoPago("EFECTIVO");
                 cfc.cabEditarMetodoPago(con, fc);
-                
+                //imprimirFactura();
             }else{
                 fc.setFacturaCabeceraTipoPago("TARJETA");
                 cfc.cabEditarMetodoPago(con, fc);
                 llamarVentanaPagoTarjeta(getDesktopPane());
             } 
             
-        } catch (ParseException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -577,7 +587,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 //Instancia para comenzar a editar el pdf
                 writer = PdfWriter.getInstance(pdf, documento);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
             }
         
             //De aqui comienza la edicion del documento .pdf
@@ -651,7 +661,7 @@ public class VRealizarFactura extends JInternalFrame implements ActionListener{
                 table.addCell(pdfCantidad);
                 String pdfPrecio = Double.toString(lista.get(i).getFacturaDetallePrecioUnitario());
                 table.addCell(pdfPrecio);
-                String pdfSubD = Double.toString(lista.get(i).getFacturaDetalleSubtotal());
+                String pdfSubD =Double.toString(lista.get(i).getFacturaDetalleSubtotal());
                 table.addCell(pdfSubD);
             }
 

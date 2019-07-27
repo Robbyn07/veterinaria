@@ -73,7 +73,6 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     private JButton b1;
     private JButton b2;
     private JButton b3;
-    private JButton b4;
     private JComboBox<String> cb1;
     private JTextField t1;
     private JLabel l2;
@@ -207,9 +206,11 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
             if(cca.verificarCedula(cedula) == true){
                 
                 nombreC = cli.getPersonaNombre();
+                l2.setText(nombreC);
                 telefonoC = cli.getPersonaTelefono();
+                l3.setText(telefonoC);
                 direccionC = cli.getPersonaDireccion();
-
+                l4.setText(direccionC);
                 mostrar();          
 
             }
@@ -222,23 +223,21 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     ArrayList<Mascota> lista;
     
     public void mostrar(){
-        
-        lista = (ArrayList<Mascota>) cli.getMascotas();//no seria necesario, porque cli ya contiene sus mascotas y solo tendria que listarlo, para no volver a llamar este metodo
+        lista = (ArrayList<Mascota>) cli.getMascotas();
         
         int n = lista.size();
         
         for(int i = 0; i < n; i++){
             Object fila[] = new Object[6];
             fila[0] = lista.get(i).getMascotaNombre();
-            fila[1] = lista.get(i).getEspecie();
-            fila[2] = lista.get(i).getRaza();
+            fila[1] = lista.get(i).getEspecie().getEspecieNombre();
+            fila[2] = lista.get(i).getRaza().getRazaNombre();
             fila[3] = lista.get(i).getMascotaGenero();
             fila[4] = lista.get(i).getMascotaColor();
             fila[5] = false;
 
             dt.addRow(fila);
         }
-        
     }
     
     String nombre;
@@ -248,14 +247,13 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
     String color;
     
     public void editarMascota(){
-        int n = lista.size();
         
         for(int i = 0; i < tb1.getRowCount(); i++){
             
             if((boolean)tb1.getValueAt(i, 5) == true){
                 Mascota mas;
-                //se le quito el segundo for
-                mas = cm.masBuscar(con, cli.getMascotas().get(i).getMascotaId());
+                
+                mas = cm.masBuscar(con, lista.get(i).getMascotaId());
 
                 especie = String.valueOf(dt.getValueAt(i,1));
                 raza = String.valueOf(dt.getValueAt(i,2));
@@ -269,14 +267,14 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                     esp = new Especie();
                     esp.setEspecieNombre(especie);
                     ces.espAgregar(con, esp);
-                    esp = ces.espBuscar(con, especie);//agregado
+                    esp = ces.espBuscar(con, especie);
                 }
 
                 if(raz == null){
                     raz = new Raza();
                     raz.setRazaNombre(raza);
                     cr.razAgregar(con, raz);
-                    raz = cr.razBuscar(con, raza);//agregado
+                    raz = cr.razBuscar(con, raza);
                 }
 
                 mas.setEspecie(esp);
@@ -285,9 +283,9 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                 mas.setMascotaColor(color);
 
                 int res = JOptionPane.showConfirmDialog(null,"Desea Confirmar la acción?",
-                        "Alerta!",JOptionPane.QUESTION_MESSAGE,JOptionPane.YES_NO_OPTION);
+                        "Alerta!",JOptionPane.YES_NO_OPTION);
 
-                if(res == 0){
+                if(res == JOptionPane.YES_OPTION){
                     if(cm.masEditar(con, mas) == true){
                         JOptionPane.showMessageDialog(null, "Operación Exitosa");
                     }else{
@@ -298,6 +296,7 @@ public class VModificarMascota extends JInternalFrame implements ActionListener{
                 }else{
 
                 }
+                
             }
         }  
         
